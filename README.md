@@ -20,6 +20,7 @@ An Chatbot based expert system to assist doctors improve screening of patients a
   -To poll Telegram API and GET JSON dict .
 * Core = Jaideep Kekre 
   -To play with JSON dict and display tokenized contents in log / CLI / Return to user as an echo (DEBUG)
+
 ##Deliverables on 10 JAN 
 * Jaideep : Tokenizers working , JSON accept , LOG (PRINT TOKENS / USERNAME)
 * Sameer : Create Medibot , 1_Medibot in telegram , Create listener , pass JSON to Core 
