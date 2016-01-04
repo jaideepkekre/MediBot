@@ -5,6 +5,7 @@ An Chatbot based expert system to assist doctors improve screening of patients a
 
 For maintaining consistency of packages across computers, these steps must be followed:
 
+* Ask Sameer (@v0dro) for the Telegram HTTP API key and load into an environment variable `TELEGRAM_API_KEY` by calling `export` on your command line.
 * Install virtualenv with `pip install virtualenv`.
 * `cd` into the MediBot directory.
 * Activate virtualenv with `source medibot_env/bin/activate`.

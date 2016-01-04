@@ -1,4 +1,3 @@
-#!/usr/bin/python
 #DATES : 4JAN15 , ___?___ 
 #CORE : called by CONSUMER.
 #USE : To read JSON object , and perform functions on it . 
