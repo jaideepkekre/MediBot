@@ -1,5 +1,16 @@
 # MediBot
 An Chatbot based expert system to assist doctors improve screening of patients and diagnosis . 
+
+# Runnable environment
+
+For maintaining consistency of packages across computers, these steps must be followed:
+
+* Install virtualenv with `pip install virtualenv`.
+* `cd` into the MediBot directory.
+* Activate virtualenv with `source medibot_env/bin/activate`.
+* Run whatever code you want.
+* New libraries etc MUST be installed through this.
+
 #Date : 2 JAN 2016
 ## Conventions
 
