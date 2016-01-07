@@ -11,7 +11,7 @@ class core(object):
   def __init__(self,arg_user_id):
     super (core, self).__init__()
     self.id = arg_user_id
-    print("USER :" + self.id)
+    print("USER :" + str(self.id))
 
 ######################################### 
 
@@ -19,9 +19,9 @@ class core(object):
   def response(self,arg_list_of_tokens):
     #passes contents of argList to console / dispatcher
     #exitPoint
-    response_dict=dict()
-    response_dict['user']=self.id
-    response_dict['response_list']=arg_list_of_tokens
+    response_dict                  = dict()
+    response_dict['chat_id']       = self.id
+    response_dict['response_list'] = arg_list_of_tokens
     return response_dict
     
 
@@ -36,35 +36,30 @@ class core(object):
     pass
   def tokenize_response(self,arg_string):
     #tokenizes a string and returns a list of tokens(optional)
-    list_of_tokens=list()
+    list_of_tokens = list()
     list_of_tokens = arg_string.split(" ")
     #add list of tokens to response dict
-    response_dict=self.language_magic(list_of_tokens)
+    response_dict  = self.language_magic(list_of_tokens)
     return response_dict
 
   def read_struct(self,arg_dict):
     #parse Dict and extract relevant info
     #calls tokenizeResponse()
     #print argDict 
-    response_dict=self.tokenize_response(str(arg_dict['text']))
+    response_dict = self.tokenize_response(str(arg_dict['text']))
     return response_dict
 
   def get_struct(self,arg_dict):
     #perform checks on Dict
     #entryPoint
-    response_dict=self.read_struct(arg_dict) 
+    response_dict = self.read_struct(arg_dict) 
     return response_dict
 
     pass
 
   def run_core(self,arg_dict):
-    response_dict=self.get_struct(arg_dict)
-    print response_dict 
+    response_dict = self.get_struct(arg_dict)
     return response_dict
-
-
-
-
 
 ###############################################
 

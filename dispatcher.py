@@ -16,22 +16,19 @@ class dispatcher():
   """
   def __init__(self):
     pass
-    
-    
-   
   
   #@author Jaideep 
   def dispatch_to_core(self,arg_dict):
-    messageDict=arg_dict
+    messageDict   = arg_dict
     #dispatching logic goes here 
-    coreobj=core.core(messageDict['chat_id'])
-    response_dict=coreobj.run_core(messageDict)
+    coreobj       = core.core(messageDict['chat_id'])
+    response_dict = coreobj.run_core(messageDict)
     return response_dict
 
   def run_dispatcher(self,arg_dict):
     #called by server() 
     #scaffolding code 
-    response_dict=self.dispatch_to_core(arg_dict)
+    response_dict = self.dispatch_to_core(arg_dict)
     #returned to server()
     #response dict has field 'chat_id' 'response_list'
     print response_dict

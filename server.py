@@ -14,13 +14,12 @@ def process_messages(bot, update):
     'chat_id' : update.message.chat_id,
     'text' : update.message.text
   }
-  
-  creator = dispatcher.dispatcher(d)
-  while not creator.is_message_ready():
-    pass
 
-  m = creator.response()
-  bot.sendMessage(chat_id=m['chat_id'], text=m['text'])
+  creator = dispatcher.dispatcher()
+  m = creator.run_dispatcher(d)
+
+  for text in m['response_list']:
+    bot.sendMessage(chat_id=m['chat_id'], text=text)
 
 updater = Updater(token=os.environ.get('TELEGRAM_API_KEY'))
 message_sender = updater.dispatcher
