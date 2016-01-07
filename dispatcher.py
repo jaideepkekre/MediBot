@@ -8,8 +8,23 @@
 
 import core
 
+class dispatcher(object):
+    """docstring for dispatcher"""
+    def __init__(self, arg):
+        super(dispatcher, self).__init__()
+        self.arg = arg
+    def accept_dict(argDict):
+        #sameer : write code to print your dict
+        pass
+
+    def dispatch_dict(argDict):
+        #
+        pass
+        
+
 def main():
-	coreobj=core.core("kekre")
+	
+    coreobj=core.core("kekre")
 	coreobj.run_core("")
 	pass
 
