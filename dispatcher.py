@@ -31,8 +31,7 @@ class dispatcher():
 
 def main():
   coreobj=core.core("kekre")
-	coreobj.run_core("")
-	pass
+	# coreobj.run_core("")
 
 if __name__ == '__main__':
 	main()
