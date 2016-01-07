@@ -15,6 +15,9 @@ class dispatcher():
   further processing.
   """
   def __init__(self):
+    self.object_list=dict()
+    #dict to store active objects
+
     pass
     
     
@@ -25,6 +28,8 @@ class dispatcher():
     messageDict=arg_dict
     #dispatching logic goes here 
     coreobj=core.core(messageDict['chat_id'])
+    self.object_list[messageDict['chat_id']]=coreobj
+    #stores created object in class variable for future use. 
     response_dict=coreobj.run_core(messageDict)
     return response_dict
 
@@ -34,7 +39,8 @@ class dispatcher():
     response_dict=self.dispatch_to_core(arg_dict)
     #returned to server()
     #response dict has field 'chat_id' 'response_list'
-    print response_dict
+    #print response_dict
+    print self.object_list 
     return response_dict 
 
 
