@@ -13,48 +13,47 @@ class core(object):
     self.id = argUserID
     print(self.id)
 
-#########################################
-
-  def get_struct(self,argDict):
-    #perform checks on Dict
-    #entryPoint
-    print("Hi from getStruct")
-    pass
-
-
-
-  def read_struct(self):
-    #parse Dict and extract relevant info
-    #calls tokenizeResponse()
-    print("Hi from readStruct")
-    pass
-
-
-  def tokenize_response(self,argString):
-    #tokenizes a string and returns a list of tokens(optional)
-    print("Hi from tokenizeResponse")
-    pass
-
-
-  def language_magic(self,argListOFtokens):
-    #gets a list of tokens as arg and does magic on them
-    #calls response()
-    print("Hi from languageMagic")
-    pass
+######################################### 
 
 
   def response(self,argList):
     #passes contents of argList to console / dispatcher
     #exitPoint
-    print("Hi from response")
+    print argList
+    pass
+
+  def language_magic(self,argListOFtokens):
+    #gets a list of tokens as arg and does magic on them
+    #calls response()
+    self.response(argListOFtokens)
+
+    pass
+  def tokenize_response(self,argString):
+    #tokenizes a string and returns a list of tokens(optional)
+    list_of_tokens=list()
+    list_of_tokens = argString.split(" ")
+    self.language_magic(list_of_tokens)
+    pass
+
+  def read_struct(self,argDict):
+    #parse Dict and extract relevant info
+    #calls tokenizeResponse()
+    #print argDict 
+    self.tokenize_response(str(argDict['text']))
+    pass
+
+  def get_struct(self,argDict):
+    #perform checks on Dict
+    #entryPoint
+    self.read_struct(argDict) 
+
     pass
 
   def run_core(self,argDict):
-    self.get_struct("sample")
-    self.read_struct()
-    self.tokenize_response("SampleString")
-    self.language_magic(['a','b','c'])
+    self.get_struct(argDict)
     pass
+
+
 
 
 
@@ -63,7 +62,8 @@ class core(object):
 def main():
   print("This is a class , don't run this directly")
   sampleOBJ=core("Kekre")
-  sampleOBJ.run_core([1,2,3,4])
+  sampleDict=sampleDict={'chat_id':'athavale' ,'text' : 'yo yo yo GTFO!'}
+  sampleOBJ.run_core(sampleDict)
   
 
 if __name__ == '__main__':
