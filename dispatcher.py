@@ -14,38 +14,35 @@ class dispatcher():
   class called by a thread that gets a dict and talks to core for 
   further processing.
   """
-  def __init__(self, message_params):
-    self.message_params = message_params
+  def __init__(self):
+    pass
     
-  def is_message_ready(self):
-    return True # change this with a method from core that tells if the message is ready
-  
-  #author : Sameer 
-  def create_dict(self):
-    # TODO: Change this 
-    d = {
-      'chat_id' : self.message_params['chat_id'],
-      'text' : "THIS IS WHAT YOU SEND ME BRUH :: " + self.message_params['text']
-    }
-
-    return d
+    
+   
   
   #@author Jaideep 
-  def dispatch_to_core(self):
-    messageDict=self.create_dict()
-    #do magic to assign all requests from one user to one object
+  def dispatch_to_core(self,arg_dict):
+    messageDict=arg_dict
+    #dispatching logic goes here 
     coreobj=core.core(messageDict['chat_id'])
-    coreobj.run_core(messageDict)
+    response_dict=coreobj.run_core(messageDict)
+    return response_dict
 
-  def run_dispatcher(self):
-    self.dispatch_to_core()
-    pass
+  def run_dispatcher(self,arg_dict):
+    #called by server() 
+    #scaffolding code 
+    response_dict=self.dispatch_to_core(arg_dict)
+    #returned to server()
+    #response dict has field 'chat_id' 'response_list'
+    print response_dict
+    return response_dict 
+
 
 def main():
   sampleDict=dict();
-  sampleDict={'chat_id':'athavale' ,'text' : 'yo yo yo GTFO!'}
-  sampleDispatch=dispatcher(sampleDict)
-  sampleDispatch.run_dispatcher()
+  sampleDict={'chat_id':'desh' ,'text' : 'yo yo yo GTFO!'}
+  sampleDispatch=dispatcher()
+  sampleDispatch.run_dispatcher(sampleDict)
 
 if __name__ == '__main__':
 	main()

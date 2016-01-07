@@ -8,50 +8,59 @@
 
 class core(object):
   """one stop shop for all your NLP needs"""
-  def __init__(self,argUserID):
+  def __init__(self,arg_user_id):
     super (core, self).__init__()
-    self.id = argUserID
-    print(self.id)
+    self.id = arg_user_id
+    print("USER :" + self.id)
 
 ######################################### 
 
 
-  def response(self,argList):
+  def response(self,arg_list_of_tokens):
     #passes contents of argList to console / dispatcher
     #exitPoint
-    print argList
-    pass
+    response_dict=dict()
+    response_dict['user']=self.id
+    response_dict['response_list']=arg_list_of_tokens
+    return response_dict
+    
 
-  def language_magic(self,argListOFtokens):
+  def language_magic(self,arg_list_of_tokens):
     #gets a list of tokens as arg and does magic on them
     #calls response()
-    self.response(argListOFtokens)
+    response_dict=self.response(arg_list_of_tokens)
+    return response_dict
+
+
 
     pass
-  def tokenize_response(self,argString):
+  def tokenize_response(self,arg_string):
     #tokenizes a string and returns a list of tokens(optional)
     list_of_tokens=list()
-    list_of_tokens = argString.split(" ")
-    self.language_magic(list_of_tokens)
-    pass
+    list_of_tokens = arg_string.split(" ")
+    #add list of tokens to response dict
+    response_dict=self.language_magic(list_of_tokens)
+    return response_dict
 
-  def read_struct(self,argDict):
+  def read_struct(self,arg_dict):
     #parse Dict and extract relevant info
     #calls tokenizeResponse()
     #print argDict 
-    self.tokenize_response(str(argDict['text']))
-    pass
+    response_dict=self.tokenize_response(str(arg_dict['text']))
+    return response_dict
 
-  def get_struct(self,argDict):
+  def get_struct(self,arg_dict):
     #perform checks on Dict
     #entryPoint
-    self.read_struct(argDict) 
+    response_dict=self.read_struct(arg_dict) 
+    return response_dict
 
     pass
 
-  def run_core(self,argDict):
-    self.get_struct(argDict)
-    pass
+  def run_core(self,arg_dict):
+    response_dict=self.get_struct(arg_dict)
+    print response_dict 
+    return response_dict
 
 
 
