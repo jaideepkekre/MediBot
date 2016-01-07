@@ -30,7 +30,7 @@ class dispatcher():
     return d
 
 def main():
-	coreobj=core.core("kekre")
+  coreobj=core.core("kekre")
 	coreobj.run_core("")
 	pass
 
