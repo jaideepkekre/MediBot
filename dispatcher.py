@@ -7,3 +7,12 @@
 #Issues: "Sameer put your issues here"
 
 import core
+
+def main():
+	coreobj=core.core("kekre")
+	coreobj.run_core("")
+	pass
+
+if __name__ == '__main__':
+	main()
+
