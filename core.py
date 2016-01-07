@@ -1,4 +1,4 @@
-#DATES : 4JAN15 , ___?___ 
+#DATES : 4JAN15 , 7JAN15 
 #CORE : called by dispatcher.py.
 #USE : To read JSON object , and perform functions on it . 
 #FUNCTIONS: getStruct() , readStruct() , tokenizeResponse() , languageMagic() 
@@ -63,15 +63,15 @@ class core(object):
 
 ###############################################
 
-def main():
+def tester():
   print("This is a class , don't run this directly")
-  sampleOBJ=core("Kekre")
-  sampleDict=sampleDict={'chat_id':'athavale' ,'text' : 'yo yo yo GTFO!'}
+  sampleOBJ=core(1234567)
+  sampleDict=sampleDict={'chat_id':1234567 ,'text' : 'yo yo yo GTFO!'}
   sampleOBJ.run_core(sampleDict)
   
 
 if __name__ == '__main__':
-  main()
+  tester()
 
 
 
