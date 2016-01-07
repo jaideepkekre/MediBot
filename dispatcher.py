@@ -53,7 +53,7 @@ class dispatcher():
     return response_dict 
 
 
-def main():
+def tester():
   sampleDict=dict();
   sampleDict={'chat_id':1234 ,'text' : 'yo yo yo GTFO!'}
   sampleDispatch=dispatcher()
@@ -67,5 +67,5 @@ def main():
 
 
 if __name__ == '__main__':
-	main()
+	tester()
 
