@@ -28,8 +28,9 @@ class dispatcher():
     messageDict=arg_dict
     #dispatching logic goes here
     for user in self.object_list:
-      print "\n\n\n" + user + " found! , reusing object\n"  
+        
       if (user == messageDict['chat_id']):
+        print "\n\n\n" + user + " found! , reusing object\n"
         core_obj=self.object_list[user]
         response_dict=core_obj.run_core(messageDict)
         return response_dict 
