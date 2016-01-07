@@ -1,5 +1,5 @@
 #!usr/bin/python
-#DATES : 4JAN15 , ___?___ 
+#DATES : 4JAN15 , 7JAN15
 #DISPATCHER : called by server.py.
 #USE : To read DICT object , and assign it to correct core object . 
 #FUNCTIONS:  
@@ -27,7 +27,7 @@ class dispatcher():
     for user in self.object_list:
         
       if (user == messageDict['chat_id']):
-        print "\n\n\n" + user + " found! , reusing object\n"
+        print "\n\n\n" + str(user) + " found! , reusing object\n"
         core_obj=self.object_list[user]
         response_dict=core_obj.run_core(messageDict)
         return response_dict 
@@ -55,11 +55,11 @@ class dispatcher():
 
 def main():
   sampleDict=dict();
-  sampleDict={'chat_id':'desh' ,'text' : 'yo yo yo GTFO!'}
+  sampleDict={'chat_id':1234 ,'text' : 'yo yo yo GTFO!'}
   sampleDispatch=dispatcher()
   sampleDispatch.run_dispatcher(sampleDict)
   sampleDispatch.run_dispatcher(sampleDict)
-  sampleDict={'chat_id':'Kekre' ,'text' : 'yo yo yo GTFO!'}
+  sampleDict={'chat_id':4321 ,'text' : 'yo yo yo GTFO!'}
   sampleDispatch.run_dispatcher(sampleDict)
   sampleDispatch.run_dispatcher(sampleDict)
    
