@@ -11,7 +11,7 @@ class core(object):
   def __init__(self,arg_user_id):
     super (core, self).__init__()
     self.id = arg_user_id
-    print("USER :" + self.id)
+    print("USER OBJECT CREATED:" + self.id)
 
 ######################################### 
 
@@ -59,7 +59,7 @@ class core(object):
 
   def run_core(self,arg_dict):
     response_dict=self.get_struct(arg_dict)
-    print response_dict 
+    #print response_dict 
     return response_dict
 
 
