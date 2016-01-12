@@ -4,10 +4,11 @@
 #Owner : @v0dro
 
 from telegram import Updater
-from core import core
 import dispatcher
 import threading
 import os
+
+CREATOR = dispatcher.dispatcher()
 
 def process_messages(bot, update):
   d = {
@@ -15,8 +16,7 @@ def process_messages(bot, update):
     'text' : update.message.text
   }
 
-  creator = dispatcher.dispatcher()
-  m = creator.run_dispatcher(d)
+  m = CREATOR.run_dispatcher(d)
 
   for text in m['response_list']:
     bot.sendMessage(chat_id=m['chat_id'], text=text)

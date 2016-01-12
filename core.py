@@ -4,7 +4,7 @@
 #FUNCTIONS: getStruct() , readStruct() , tokenizeResponse() , languageMagic() 
 #Owner : Jaideep Kekre 
 #Issues: "Sameer put your issues here"
-
+# from expert_system import expert_system
 
 class core(object):
   """one stop shop for all your NLP needs"""
@@ -19,21 +19,22 @@ class core(object):
   def response(self,arg_list_of_tokens):
     #passes contents of argList to console / dispatcher
     #exitPoint
+    # expert_object = expert_system.expert_system()
+    # expert_object(response_dict)
     response_dict                  = dict()
     response_dict['chat_id']       = self.id
     response_dict['response_list'] = arg_list_of_tokens
+
     return response_dict
     
 
   def language_magic(self,arg_list_of_tokens):
     #gets a list of tokens as arg and does magic on them
     #calls response()
-    response_dict=self.response(arg_list_of_tokens)
+    response_dict = self.response(arg_list_of_tokens)
+
     return response_dict
 
-
-
-    pass
   def tokenize_response(self,arg_string):
     #tokenizes a string and returns a list of tokens(optional)
     list_of_tokens = list()
@@ -52,10 +53,10 @@ class core(object):
   def get_struct(self,arg_dict):
     #perform checks on Dict
     #entryPoint
+    # TODO: Preprocess string - remove extra spaces, capitalize everything, run 
+    # through spell check library
     response_dict = self.read_struct(arg_dict) 
     return response_dict
-
-    pass
 
   def run_core(self,arg_dict):
     response_dict = self.get_struct(arg_dict)
@@ -65,8 +66,8 @@ class core(object):
 
 def tester():
   print("This is a class , don't run this directly")
-  sampleOBJ=core(1234567)
-  sampleDict=sampleDict={'chat_id':1234567 ,'text' : 'yo yo yo GTFO!'}
+  sampleOBJ  = core(1234567)
+  sampleDict = {'chat_id':1234567 ,'text' : 'yo yo yo GTFO!'}
   sampleOBJ.run_core(sampleDict)
   
 
