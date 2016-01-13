@@ -33,16 +33,18 @@ For maintaining consistency of packages across computers, these steps must be fo
 * Core = Jaideep Kekre 
   -To play with JSON dict and display tokenized contents in log / CLI / Return to user as an echo (DEBUG)
 
-##Deliverables on 10 JAN 
+#Deliverables on 10 JAN 
 * Jaideep : Tokenizers working , JSON accept , LOG (PRINT TOKENS / USERNAME)
 * Sameer : Create Medibot , 1_Medibot in telegram , Create listener , pass JSON to Core 
+
 ##Functions affected
 * Core : core() , make_token , get_user() , read_response() 
 * Consumer : TBD 
 
-##Deliverables on 24 JAN 
+#Deliverables on 24 JAN 
 * Jaideep : convert obo to json , service sample knowledge request , parse knowledge json db , make string input to core pretty
 * Sameer : convert / implement non blocking queue based bot producer / consumer , create basic 4 QA db independent EXPERT_SYSTEM 
+
 ##Functions affected
 * Core :  get_struct()
 * Consumer : producer() , consumer()
