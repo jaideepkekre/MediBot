@@ -5,6 +5,12 @@
 #FUNCTIONS:  
 #Owner : Jaideep Kekre 
 #Issues: "Sameer put your issues here"
+# issue#1 -> I dont think this class should be used anymore. I'm using a multi-process
+#   architecture in the server, and it might become cumbersome to pipe this object
+#   between the process that calls the telegram poller and the process that calls
+#   the dispatcher. Calling core directly, and pulling the conversation from an
+#   in-memory data base like Redis would based on the chat_id would be better and
+#   simpler.
 
 import core
 

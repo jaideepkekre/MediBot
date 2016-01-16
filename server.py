@@ -5,24 +5,33 @@
 
 from telegram import Updater
 import dispatcher
-import threading
+from multiprocessing import Process, Queue
 import os
 
 CREATOR = dispatcher.dispatcher()
+MESSAGE_QUEUE = Queue()
 
-def process_messages(bot, update):
+def dispatch_messages(queue_local):
+  while True:
+    if not queue_local.empty():
+      user_info = queue_local.get()
+      m = CREATOR.run_dispatcher(user_info)
+
+      for text in m['response_list']:
+        user_info['bot'].sendMessage(chat_id=m['chat_id'], text=text)
+
+def accept_message(bot, update):
   d = {
     'chat_id' : update.message.chat_id,
-    'text' : update.message.text
+    'text'    : update.message.text,
+    'bot'     : bot
   }
 
-  m = CREATOR.run_dispatcher(d)
+  MESSAGE_QUEUE.put(d)
 
-  for text in m['response_list']:
-    bot.sendMessage(chat_id=m['chat_id'], text=text)
-
-updater = Updater(token=os.environ.get('TELEGRAM_API_KEY'))
-message_sender = updater.dispatcher
-message_sender.addTelegramMessageHandler(process_messages)
-updater.start_polling()
- 
+telegram_poller = Updater(token=os.environ.get('TELEGRAM_API_KEY'))
+message_sender  = telegram_poller.dispatcher
+message_sender.addTelegramMessageHandler(accept_message)
+message_processor = Process(target=dispatch_messages, args=(MESSAGE_QUEUE,))
+message_processor.start()
+telegram_poller.start_polling()
