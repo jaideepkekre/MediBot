@@ -1,4 +1,6 @@
-# @author Sameer
+# @author Sameer , Jaideep 
+#Todo 
+#Owner:Jaideep
 
 class knowledge_store():
   """docstring for knowledge_store"""
