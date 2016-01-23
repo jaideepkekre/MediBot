@@ -1,12 +1,7 @@
 # @author Sameer
-#ToDo
-#Owner:Sameer
-# call the OBO database and create an understandable JSON format that will
-# be understood by the expert system.
-
-# TODO: Make a mock expert system with hyper simple test case and generate
-# responses on telegram side.
-
+#
+# Purpose: The job of the ES is to take the relevant data from the NLP module
+# and generate  
 from knowledge_store import knowledge_store
 
 class expert_system()
@@ -21,3 +16,12 @@ class expert_system()
     knowledge = knowledge_store.knowledge_store()
     knowledge.run_knowledge_store(arg_dict)
     pass
+
+###############################################
+
+def tester():
+  print("This is a class , don't run this directly")
+
+
+if __name__ == '__main__':
+  tester()
