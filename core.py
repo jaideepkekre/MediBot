@@ -6,6 +6,8 @@
 #Issues: "Sameer put your issues here"
 # from expert_system import expert_system
 
+import nltk 
+
 class core(object):
   """one stop shop for all your NLP needs"""
   def __init__(self,arg_user_id):

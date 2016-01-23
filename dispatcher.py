@@ -26,7 +26,7 @@ class dispatcher():
 
     pass
   
-  #@author Jaideep 
+   
   def dispatch_to_core(self,arg_dict):
     messageDict=arg_dict
     #dispatching logic goes here
