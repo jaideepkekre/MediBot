@@ -24,11 +24,19 @@ def return_messages(return_queue):
       bot.sendMessage(
         chat_id=m['chat_id'], text=text, reply_markup=m['keyboard'])    
 
+  user_thread_dict = {}
   while True:
     if not return_queue.empty():
       response = return_queue.get()
-      t = threading.Thread(target=actually_return_messages, args=(response,))
-      t.start()
+      chat_id = response[0]['chat_id']
+
+      if user_thread_dict.has_key(chat_id):
+        user_thread_dict[chat_id].join()
+        user_thread_dict.pop(chat_id)
+
+      user_thread_dict[chat_id] = threading.Thread(target=actually_return_messages, args=(response,))
+      user_thread_dict[chat_id].start()
+
 
 def dispatch_messages(queue_local):
   while True:
