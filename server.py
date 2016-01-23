@@ -9,33 +9,35 @@ import dispatcher
 from multiprocessing import Process, Queue
 import os
 from time import sleep
+import threading
 
-CREATOR = dispatcher.dispatcher()
-MESSAGE_QUEUE = Queue()
+CREATOR                = dispatcher.dispatcher()
+MESSAGE_QUEUE          = Queue()
+FINISHED_MESSAGE_QUEUE = Queue()
 
 def return_messages(return_queue):
+  def actually_return_messages(resp):
+    m   = resp[0]
+    bot = resp[1]
+
+    for text in m['response_list']:
+      bot.sendMessage(
+        chat_id=m['chat_id'], text=text, reply_markup=m['keyboard'])    
+
   while True:
     if not return_queue.empty():
       response = return_queue.get()
-      m       = response[0]
-      bot     = response[1]
-      
-      for text in m['response_list']:
-        bot.sendMessage(
-          chat_id=m['chat_id'], text=text, reply_markup=m['keyboard'])
+      t = threading.Thread(target=actually_return_messages, args=(response,))
+      t.start()
 
 def dispatch_messages(queue_local):
-  finished_messages_queue = Queue()
-  message_returner = Process(target=return_messages, args=(finished_messages_queue,))
-  message_returner.start()
-
   while True:
     sleep(0.1)
     if not queue_local.empty():
       user_info = queue_local.get()
       m = CREATOR.run_dispatcher(user_info)
 
-      finished_messages_queue.put((m, user_info['bot']))
+      FINISHED_MESSAGE_QUEUE.put((m, user_info['bot']))
 
 def accept_message(bot, update):
   d = {
@@ -49,6 +51,10 @@ def accept_message(bot, update):
 telegram_poller = Updater(token=os.environ.get('TELEGRAM_API_KEY'))
 message_sender  = telegram_poller.dispatcher
 message_sender.addTelegramMessageHandler(accept_message)
+
 message_processor = Process(target=dispatch_messages, args=(MESSAGE_QUEUE,))
+message_returner  = Process(target=return_messages, args=(FINISHED_MESSAGE_QUEUE,))
+
 message_processor.start()
-telegram_poller.start_polling()
+message_returner .start()
+telegram_poller  .start_polling()
