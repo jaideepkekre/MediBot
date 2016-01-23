@@ -4,22 +4,38 @@
 #Owner : @v0dro
 
 from telegram import Updater
+from telegram_interface import create_keyboard
 import dispatcher
 from multiprocessing import Process, Queue
 import os
+from time import sleep
 
 CREATOR = dispatcher.dispatcher()
 MESSAGE_QUEUE = Queue()
 
-def dispatch_messages(queue_local):
+def return_messages(return_queue):
   while True:
+    if not return_queue.empty():
+      response = return_queue.get()
+      m       = response[0]
+      bot     = response[1]
+      
+      for text in m['response_list']:
+        bot.sendMessage(
+          chat_id=m['chat_id'], text=text, reply_markup=m['keyboard'])
+
+def dispatch_messages(queue_local):
+  finished_messages_queue = Queue()
+  message_returner = Process(target=return_messages, args=(finished_messages_queue,))
+  message_returner.start()
+
+  while True:
+    sleep(0.1)
     if not queue_local.empty():
       user_info = queue_local.get()
       m = CREATOR.run_dispatcher(user_info)
 
-      for text in m['response_list']:
-        user_info['bot'].sendMessage(
-          chat_id=m['chat_id'], text=text, reply_markup=m['keyboard'])
+      finished_messages_queue.put((m, user_info['bot']))
 
 def accept_message(bot, update):
   d = {

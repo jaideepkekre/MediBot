@@ -15,7 +15,7 @@ def create_keyboard(text_list, orientation='column'):
   else:
     raise("Wrong input " + orientation)
 
-  return telegram.ReplyKeyboardMarkup(presentation_text)
+  return telegram.ReplyKeyboardMarkup(presentation_text, one_time_keyboard=True)
 
 
 def tester():
