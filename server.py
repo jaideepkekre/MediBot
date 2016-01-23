@@ -3,10 +3,11 @@
 # after wrapping in a nice JSON format.
 #Owner : @v0dro
 
-from telegram import Updater
+import telegram
 import dispatcher
 from multiprocessing import Process, Queue
 import os
+from telegram_interface import create_keyboard
 
 CREATOR = dispatcher.dispatcher()
 MESSAGE_QUEUE = Queue()
@@ -18,7 +19,8 @@ def dispatch_messages(queue_local):
       m = CREATOR.run_dispatcher(user_info)
 
       for text in m['response_list']:
-        user_info['bot'].sendMessage(chat_id=m['chat_id'], text=text)
+        user_info['bot'].sendMessage(
+          chat_id=m['chat_id'], text=text, reply_markup=m['keyboard'])
 
 def accept_message(bot, update):
   d = {
@@ -29,7 +31,7 @@ def accept_message(bot, update):
 
   MESSAGE_QUEUE.put(d)
 
-telegram_poller = Updater(token=os.environ.get('TELEGRAM_API_KEY'))
+telegram_poller = telegram.Updater(token=os.environ.get('TELEGRAM_API_KEY'))
 message_sender  = telegram_poller.dispatcher
 message_sender.addTelegramMessageHandler(accept_message)
 message_processor = Process(target=dispatch_messages, args=(MESSAGE_QUEUE,))
