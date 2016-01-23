@@ -14,6 +14,7 @@ MESSAGE_QUEUE = Queue()
 
 def dispatch_messages(queue_local):
   while True:
+    sleep(0.1)
     if not queue_local.empty():
       user_info = queue_local.get()
       m = CREATOR.run_dispatcher(user_info)
