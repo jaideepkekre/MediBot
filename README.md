@@ -2,15 +2,13 @@
 An Chatbot based expert system to assist doctors improve screening of patients and diagnosis . 
 
 # Runnable environment
+For running the medibot code the following must must be pasted in .bashrc
 
-For maintaining consistency of packages across computers, these steps must be followed:
+export PYTHONPATH="${PYTHONPATH}:/home/path/to/MediBot/bin"
+export PYTHONPATH="${PYTHONPATH}:/home/path/to/MediBot/expert_system"
+export PYTHONPATH="${PYTHONPATH}:/home/path/to/MediBot/lib"
 
-* Ask Sameer (@v0dro) for the Telegram HTTP API key and load into an environment variable `TELEGRAM_API_KEY` by calling `export` on your command line.
-* Install virtualenv with `pip install virtualenv`.
-* `cd` into the MediBot directory.
-* Activate virtualenv with `source medibot_env/bin/activate`.
-* Run whatever code you want.
-* New libraries etc MUST be installed through this.
+
 
 #Date : 2 JAN 2016
 ## Conventions
