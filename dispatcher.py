@@ -13,6 +13,7 @@
 #   simpler.
 
 import core
+from helper import bcolors
 
 # @author Sameer Deshmukh / Jaideep Kekre 
 class dispatcher():
@@ -33,13 +34,13 @@ class dispatcher():
     for user in self.object_list:
         
       if (user == messageDict['chat_id']):
-        print "\n\n\n" + str(user) + " found! , reusing object\n"
+        #print "\n\n\n" + str(user) + " found! , reusing object\n"
         core_obj=self.object_list[user]
         response_dict=core_obj.run_core(messageDict)
         return response_dict 
 
       
-    print str(messageDict['chat_id']) + " not found , creating new object "
+    print bcolors.FAIL + str(messageDict['chat_id']) + " not found , creating new object "
     coreobj=core.core(messageDict['chat_id'])
     self.object_list[messageDict['chat_id']]=coreobj
     #stores created object in class variable for future use. 
@@ -53,9 +54,9 @@ class dispatcher():
     #returned to server()
     #response dict has field 'chat_id' 'response_list'
     #logging
-    print "\ninput is :"  + str(arg_dict)
-    print "response is :" + str(response_dict)
-    print self.object_list  
+    print bcolors.OKGREEN + "\input is :"  + str(arg_dict['text'])
+    print bcolors.OKBLUE+ "response is :" + str(response_dict['response_list']) + "\n"
+    #print self.object_list  
     return response_dict 
 
 
