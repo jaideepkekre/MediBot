@@ -36,7 +36,7 @@ class dispatcher():
         return response_dict 
 
       
-    print bcolors.FAIL + str(messageDict['chat_id']) + " not found , creating new object "
+    print bcolors.FAIL + "User with chat id"+str(messageDict['chat_id']) + " not found , creating new object "
     coreobj=core.core(messageDict['chat_id'])
     self.object_list[messageDict['chat_id']]=coreobj
     #stores created object in class variable for future use. 

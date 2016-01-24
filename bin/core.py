@@ -15,7 +15,7 @@ class core(object):
   def __init__(self,arg_user_id):
     super (core, self).__init__()
     self.id = arg_user_id
-    print bcolors.HEADER + "USER OBJECT CREATED WITH CHAT ID: " + str(self.id)
+    print bcolors.HEADER + "USER OBJECT CREATED WITH CHAT ID: " + str(self.id) + "\n"
 
 ######################################### 
 

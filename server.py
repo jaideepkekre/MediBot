@@ -15,8 +15,7 @@ MESSAGE_QUEUE = Queue()
 
 def return_messages(return_queue):
   while True:
-    if return_queue.empty():
-      sleep(2)
+         
     if not return_queue.empty():
       response = return_queue.get()
       m       = response[0]
@@ -32,7 +31,7 @@ def dispatch_messages(queue_local):
   message_returner.start()
 
   while True:
-    sleep(0.1)
+    
     if not queue_local.empty():
       user_info = queue_local.get()
       m = CREATOR.run_dispatcher(user_info)
