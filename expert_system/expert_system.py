@@ -16,6 +16,9 @@ class expert_system()
     knowledge = knowledge_store.knowledge_store()
     knowledge.run_knowledge_store(arg_dict)
     pass
+  def question(self,arg_dict):
+    
+    pass 
 
 ###############################################
 
