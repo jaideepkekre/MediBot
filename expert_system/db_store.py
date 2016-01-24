@@ -3,7 +3,7 @@
 #_author_ = Jaideep Kekre
 #_info_   = This module contains a Python Script 
 
-from q_interface import QuestionInterface 
+from question_interface import QuestionInterface 
 
 class populate(object):
 	"""docstring for populate"""

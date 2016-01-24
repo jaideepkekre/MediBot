@@ -9,7 +9,7 @@ from helper import bcolors
 
 
 class question_interface(object):
-    """docstring for questionInterface"""
+    """docstring for QuestionInterface"""
     def __init__(self):
         super(QuestionInterface, self).__init__()
             
