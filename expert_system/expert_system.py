@@ -2,12 +2,15 @@
 #
 # Purpose: The job of the ES is to take the relevant data from the NLP module
 # and generate  
-from db_store import populate
-from question_interface import question_interface 
 from random import randint
+
 from telegram_interface import create_keyboard
 
-class expert_system : 
+from db_store import populate
+from question_interface import question_interface
+
+
+class expert_system:
   """
   The awesome expert system that we gonna create.
   """

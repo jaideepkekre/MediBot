@@ -21,11 +21,6 @@ class populate(object):
         q.response_type='ruledchar'
         q.tag          = 'fever'
         list_of_questions_top.append(q)
-
-
-
-        
-        
         q              =question_interface()
         q.question     = "Do you have body pain ?"
         q.response     =['yes','no']
@@ -33,9 +28,7 @@ class populate(object):
         q.tag          ='bodypain'
         list_of_questions_top.append(q)
 
-        print list_of_questions_top 
-
-
+        print list_of_questions_top
         return list_of_questions_top 
 
 
