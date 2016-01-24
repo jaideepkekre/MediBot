@@ -11,7 +11,7 @@ from helper import bcolors
 class question_interface(object):
     """docstring for QuestionInterface"""
     def __init__(self):
-        super(QuestionInterface, self).__init__()
+        super(question_interface, self).__init__()
             
         self.question       = None
         self.response_re    = ['reg_exp_1' ,'reg_exp_2',None,None]
@@ -72,7 +72,7 @@ def test():
 
     q.verify_response(0,1,'yesyesyes')
     q.verify_response(0,1,'yesyesnoyes')
-    q.verify_response(0,1,'poop')
+    q.verify_response(0,1,'poyesop')
     pass
 
 
