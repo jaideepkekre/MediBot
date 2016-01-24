@@ -12,16 +12,17 @@ class question_interface(object):
     """docstring for QuestionInterface"""
     def __init__(self):
         super(question_interface, self).__init__()
-            
-        self.question       = None
-        self.response_re    = ['reg_exp_1' ,'reg_exp_2',None,None]
-        self.response       = ['response_1',None,None,None]
-        self.response_type  = ['int','bool','float','randchar','ruledchar']
-        self.ranged         = None
-        self.range          = ['lower','upper']
-        self.ret            = ['_#ERROR#_','_#MISMATCH#_','_#MULTIPLE#_']
-        self.is_top_level   = 0 
-        self.custom_keyboard= 0 
+        self.tag             = None   
+        self.question        = None
+        self.response_re     = ['reg_exp_1' ,'reg_exp_2',None,None]
+        self.response        = ['response_1',None,None,None]
+        self.response_type   = ['int','bool','float','randchar','ruledchar']
+        self.ranged          = None
+        self.range           = ['lower','upper']
+        self.ret             = ['_#ERROR#_','_#MISMATCH#_','_#MULTIPLE#_']
+        self.is_top_level    = 0 
+        self.custom_keyboard = 0 
+        self.linked_questions= None 
 
     def verify_response(self,check_via_re,check_via_response,response_to_verify):
         flag=[0,0,0,0]

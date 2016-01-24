@@ -8,6 +8,7 @@
 
 import nltk 
 from helper import bcolors
+from expert_system import expert_system
 
 
 class core(object):
@@ -16,6 +17,8 @@ class core(object):
     super (core, self).__init__()
     self.id = arg_user_id
     print bcolors.HEADER + "USER OBJECT CREATED WITH CHAT ID: " + str(self.id) + "\n"
+
+    self.expert = expert_system()
 
 ######################################### 
 
@@ -27,8 +30,13 @@ class core(object):
     # expert_object(response_dict)
     response_dict                  = dict()
     response_dict['chat_id']       = self.id
-    response_dict['response_list'] = arg_list_of_tokens
-    response_dict['keyboard']      = None
+
+    expert_advice = self.expert.run_expert(arg_list_of_tokens)
+    response_list = list()
+
+    response_list.append(expert_advice['text'])
+    response_dict['response_list'] = response_list
+    response_dict['keyboard']      = expert_advice['keyboard']
 
     return response_dict
     
