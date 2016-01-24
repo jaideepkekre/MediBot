@@ -28,6 +28,7 @@ class question_interface(object):
     def verify_response(self, check_via_re, check_via_response, response_to_verify):
         flag = [0, 0, 0, 0]
         flag_index = 0
+        index = -1
         if (check_via_re == 1):
 
             for pattern in self.response_re:
@@ -49,6 +50,7 @@ class question_interface(object):
 
         error_flag = 0
         found_at = -1
+        index = -1
         for index in flag:
             if index == 1 and error_flag == 1:
                 print bcolors.FAIL + self.ret[2]
