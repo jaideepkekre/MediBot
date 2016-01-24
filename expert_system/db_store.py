@@ -13,15 +13,13 @@ class populate(object):
 
     def poplulate_questions_top(self):
         list_of_questions_top=list()
-
-        
-        q              =question_interface()
-        q.question     = "Do you have a fever ?"
-        q.response     =['yes','no']
+        q = question_interface()
+        q.question = "Do you have a fever ?"
+        q.response = ['yes', 'no']
         q.response_type='ruledchar'
-        q.tag          = 'fever'
+        q.tag = 'fever'
         list_of_questions_top.append(q)
-        q              =question_interface()
+        q = question_interface()
         q.question     = "Do you have body pain ?"
         q.response     =['yes','no']
         q.response_type='ruledchar'
