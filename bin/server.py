@@ -55,9 +55,10 @@ def accept_message(bot, update):
   }
 
   MESSAGE_QUEUE.put(d)
+TOKEN    = os.environ.get('TELEGRAM_API_KEY')
 
-telegram_poller = Updater(token=os.environ.get('TELEGRAM_API_KEY'))
-message_sender  = telegram_poller.dispatcher
+updater = Updater(token=TOKEN)
+message_sender  = updater.dispatcher
 message_sender.addTelegramMessageHandler(accept_message)
 
 message_processor = Process(target=dispatch_messages, args=(MESSAGE_QUEUE,))
@@ -65,4 +66,5 @@ message_returner  = Process(target=return_messages, args=(FINISHED_MESSAGE_QUEUE
 
 message_processor.start()
 message_returner .start()
-telegram_poller  .start_polling()
+updater.start_polling(poll_interval=0.1)
+updater.idle()
