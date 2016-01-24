@@ -4,10 +4,9 @@
 # and generate  
 from random import randint
 
-from telegram_interface import create_keyboard
-
 from db_store import populate
 from question_interface import question_interface
+from telegram_interface import create_keyboard
 
 
 class expert_system:

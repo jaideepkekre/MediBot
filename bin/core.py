@@ -3,11 +3,10 @@
 # USE : To read JSON object , and perform functions on it .
 # FUNCTIONS: getStruct() , readStruct() , tokenizeResponse() , languageMagic()
 # Owner : Jaideep Kekre
-# Issues: "Sameer put your issues here"
-# from expert_system import expert_system
+# Issues: "Sameer put your issues here"# from expert_system import expert_system
 
-from helper import bcolors
 from expert_system import expert_system
+from helper import bcolors
 
 
 class core(object):
@@ -19,9 +18,6 @@ class core(object):
         print bcolors.HEADER + "USER OBJECT CREATED WITH CHAT ID: " + str(self.id) + "\n"
 
         self.expert = expert_system()
-
-    #########################################
-
 
     def response(self, arg_list_of_tokens):
         # passes contents of argList to console / dispatcher
@@ -74,8 +70,6 @@ class core(object):
         response_dict = self.get_struct(arg_dict)
         return response_dict
 
-
-###############################################
 
 def tester():
     print("This is a class , don't run this directly")
