@@ -11,11 +11,13 @@ import os
 from time import sleep
 import threading
 
+TOKEN                  = os.environ.get('TELEGRAM_API_KEY')
 CREATOR                = dispatcher.dispatcher()
 MESSAGE_QUEUE          = Queue()
 FINISHED_MESSAGE_QUEUE = Queue()
 
 def return_messages(return_queue):
+  print "return_messages " + str(os.getpid())
   def actually_return_messages(resp):
     m   = resp[0]
     bot = resp[1]
@@ -26,6 +28,7 @@ def return_messages(return_queue):
 
   user_thread_dict = {}
   while True:
+    sleep(0.1)
     if not return_queue.empty():
       response = return_queue.get()
       chat_id = response[0]['chat_id']
@@ -39,6 +42,7 @@ def return_messages(return_queue):
 
 
 def dispatch_messages(queue_local):
+  print "dispatch_messages " + str(os.getpid())
   while True:
     sleep(0.1)
     if not queue_local.empty():
@@ -55,7 +59,6 @@ def accept_message(bot, update):
   }
 
   MESSAGE_QUEUE.put(d)
-TOKEN    = os.environ.get('TELEGRAM_API_KEY')
 
 updater = Updater(token=TOKEN)
 message_sender  = updater.dispatcher
@@ -66,5 +69,6 @@ message_returner  = Process(target=return_messages, args=(FINISHED_MESSAGE_QUEUE
 
 message_processor.start()
 message_returner .start()
+print "parent " + str(os.getpid())
 updater.start_polling(poll_interval=0.1)
 updater.idle()
