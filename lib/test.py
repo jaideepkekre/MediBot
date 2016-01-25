@@ -5,44 +5,47 @@
 
 from dispatcher import dispatcher
 
-class bcolors:
-  """Pretty colours for the terminal"""
 
-  HEADER = '\033[95m'
-  OKBLUE = '\033[94m'
-  OKGREEN = '\033[92m'
-  WARNING = '\033[93m'
-  FAIL = '\033[91m'
-  ENDC = '\033[0m'
-  BOLD = '\033[1m'
-  UNDERLINE = '\033[4m'
+class bcolors:
+    """Pretty colours for the terminal"""
+
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 
 class tester(object):
-  """defines methods for easy testing"""
-  
-  def __init__(self):
-    self.creator = dispatcher()
-    self.mock_user_dict = {
-      'chat_id' : 1,
-      'text'    : ""
-    }
+    """defines methods for easy testing"""
 
-  def assert_eql(self, expected, actual):
-    if expected == actual:
-      print bcolors.OKGREEN + "PASS." + bcolors.ENDC
-    else:
-      print bcolors.FAIL + "FAIL." + bcolors.ENDC
+    def __init__(self):
+        self.creator = dispatcher()
+        self.mock_user_dict = {
+            'chat_id': 1,
+            'text': ""
+        }
 
-  def user(self, user_message):
-    self.mock_user_dict['text'] = user_message
-    self.response_list = self.creator.run_dispatcher(self.mock_user_dict)['response_list']
+    def assert_eql(self, expected, actual):
+        if expected == actual:
+            print bcolors.OKGREEN + "PASS." + bcolors.ENDC
+        else:
+            print bcolors.FAIL + "FAIL." + bcolors.ENDC
 
-  def bot(self, bot_response):
-    if type(bot_response) == list:
-      pass
-      # TODO: In case of multiple responses.
-    else:
-      self.assert_eql(bot_response, self.response_list[0])
+    def user(self, user_message):
+        self.mock_user_dict['text'] = user_message
+        self.response_list = self.creator.run_dispatcher(self.mock_user_dict)['response_list']
+
+    def bot(self, bot_response):
+        if type(bot_response) == list:
+            pass
+            # TODO: In case of multiple responses.
+        else:
+            self.assert_eql(bot_response, self.response_list[0])
+
 
 t = tester()
 
