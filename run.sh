@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 #Owner :Jaideep Kekre
 #_author_ = Jaideep Kekre
