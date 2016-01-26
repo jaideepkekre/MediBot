@@ -92,8 +92,6 @@ class expert_system:
         response['keyboard'] = None
         return response
 
-        ###############################################
-
 
 def tester():
     print("This is a class , don't run this directly")
