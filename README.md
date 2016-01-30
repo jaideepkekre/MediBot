@@ -8,7 +8,19 @@ For running the medibot code the following must must be pasted in .bashrc
 * export PYTHONPATH="${PYTHONPATH}:/home/path/to/MediBot/expert_system"
 * export PYTHONPATH="${PYTHONPATH}:/home/path/to/MediBot/lib"
 
+**Database connection**
 
+* Install the redis-py package with `pip install redis`.
+* Install redis with:
+```
+wget http://download.redis.io/redis-stable.tar.gz
+tar xvzf redis-stable.tar.gz
+cd redis-stable
+make
+sudo cp src/redis-server /usr/local/bin/
+sudo cp src/redis-cli /usr/local/bin/
+```
+* Start with `redis-server`. This will start redis on localhost on port 6379.
 
 #Date : 2 JAN 2016
 ## Conventions
