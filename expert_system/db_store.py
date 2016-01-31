@@ -21,6 +21,37 @@ class populate(object):
     def _populate_database(self):
         if not self.connection.get('questions'):
             print bcolors.HEADER + "Could not questions. Populating DB now." + bcolors.ENDC
+            db = {
+                'fever' : {
+                    'question' : "Do you have a fever?",
+                    'response' : ['Yes', 'No'],
+                    'response_type' : 'ruledchar',
+                    'linked_questions' : {
+                        'question' : "Please measure your fever with a thermometer and tell us your temperature.",
+                        'response_type' : ['int', 'float'],
+                        'ranged' : True,
+                        'range' : [95, 110],
+                        'custom_keyboard' : 'numpad'
+                    }
+                },
+
+                'body_pain' : {
+                    'question' : "Do you have body pain?",
+                    'response' : ['Yes', 'No'],
+                    'response_type' : 'ruledchar',
+                    'linked_questions' : {
+                        'question' : "Where are you experiencing pain the most?"
+                        'response' : ['Head', 'Abdomen', 'Hands', 'Legs'],
+                        'response_type' : 'ruledchar',
+                        'loop' : True
+                        'linked_questions' : {
+                            'question' : "Are you still having body pain elsewhere?",
+                            'response' : ['Yes', 'No'],
+                            'response_type' : 'ruledchar'
+                        }
+                    }
+                }
+            }
 
     """
     Connect with redis and create a list containing top questions and their
