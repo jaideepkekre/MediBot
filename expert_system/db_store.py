@@ -16,47 +16,9 @@ class populate(object):
             host='localhost',
             port=6379, 
             password='')
-        self._populate_database()
 
-    def _populate_database(self):
-        if not self.connection.get('questions'):
-            print bcolors.HEADER + "Could not questions. Populating DB now." + bcolors.ENDC
-            db = {
-                'fever' : {
-                    'question' : "Do you have a fever?",
-                    'response' : ['Yes', 'No'],
-                    'response_type' : 'ruledchar',
-                    'linked_questions' : {
-                        'question' : "Please measure your fever with a thermometer and tell us your temperature.",
-                        'response_type' : ['int', 'float'],
-                        'ranged' : True,
-                        'range' : [95, 110],
-                        'custom_keyboard' : 'numpad'
-                    }
-                },
-
-                'body_pain' : {
-                    'question' : "Do you have body pain?",
-                    'response' : ['Yes', 'No'],
-                    'response_type' : 'ruledchar',
-                    'linked_questions' : {
-                        'question' : "Where are you experiencing pain the most?"
-                        'response' : ['Head', 'Abdomen', 'Hands', 'Legs'],
-                        'response_type' : 'ruledchar',
-                        'loop' : True
-                        'linked_questions' : {
-                            'question' : "Are you still having body pain elsewhere?",
-                            'response' : ['Yes', 'No'],
-                            'response_type' : 'ruledchar'
-                        }
-                    }
-                }
-            }
 
     """
-    Connect with redis and create a list containing top questions and their
-    links (links are contained inside question objects).
-
     A 'top question' refers to a question that is the starting point to gain
     more information about a particular symptom.
 
@@ -88,3 +50,33 @@ def test():
 
 
 if __name__ == '__main__':
+    test()
+# notes:
+# dengue symptoms:
+#   severe headache
+#   fever > 101
+#   rash
+#   muscle pain
+#   severe pain behind the eyes
+#   joint pain
+#   mild bleeding
+
+# malaria symptoms:
+#   attacks of chills
+#   periodic high fever (upto 104)
+#   headache
+#   body ache
+
+# hepatitis A:
+# indications:
+#   had dirty food or water in the past
+# symptoms:
+#   fever
+#   fatigue
+#   loss of apetite
+#   nausea (elaborate)
+#   vomiting
+#   abdominal pain
+#   clay-coloured bowels
+#   joint pain
+#   yellowing of eyes
