@@ -7,6 +7,7 @@ For running the medibot code the following must must be pasted in .bashrc
 * export PYTHONPATH="${PYTHONPATH}:/home/path/to/MediBot/bin"
 * export PYTHONPATH="${PYTHONPATH}:/home/path/to/MediBot/expert_system"
 * export PYTHONPATH="${PYTHONPATH}:/home/path/to/MediBot/lib"
+* export PYTHONPATH="${PYTHONPATH}:/home/path/to/MediBot/data"
 
 **Database connection**
 
