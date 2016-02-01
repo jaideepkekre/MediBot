@@ -4,8 +4,7 @@
 # _info_   = Nausea top questions.
 
 def data():
-    return 
-    {
+    return  {
         'nausea_vomiting' : {
             'question' : "Have you had any vomiting recently?",
             'response' : ['Yes','No'],

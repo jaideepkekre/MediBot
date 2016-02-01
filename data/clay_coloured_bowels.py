@@ -4,8 +4,7 @@
 # _info_   = Top questions.
 
 def data():
-  return 
-  {
+  return {
   }
 
 if __name__ == '__main__':

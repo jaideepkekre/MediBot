@@ -4,8 +4,7 @@
 # _info_   = Questions for fever.
 
 def data():
-    return 
-    {
+    return {
         'fever_measure' : {
             'question' : "Please measure your fever with a thermometer and tell us your temperature.",
             'response_type' : ['int', 'float'],

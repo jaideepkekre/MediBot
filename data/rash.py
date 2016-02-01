@@ -4,8 +4,7 @@
 # _info_   = Questions for rash.
 
 def data():
-    return 
-    {
+    return {
         'rash_area' : {
             'question' : "Where are you having a rash?",
             'response' : ['Face', 'Abdomen', 'Hands', 'Legs'],

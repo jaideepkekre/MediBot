@@ -4,8 +4,7 @@
 # _info_   = Top questions.
 
 def data():
-    return 
-    {
+    return  {
         'fever' : {
             'question' : "Do you have a fever?",
             'response' : ['Yes', 'No'],
@@ -57,3 +56,7 @@ def data():
             'response_type' : 'ruledchar',
         },
     }
+
+if __name__ == '__main__':
+    d = data()
+    print d['nausea']

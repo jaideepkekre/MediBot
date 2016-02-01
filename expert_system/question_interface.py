@@ -25,6 +25,7 @@ class question_interface(object):
         self.custom_keyboard = 0
         self.linked_questions = None
         self.loop = False
+        self.serial = None
 
     def verify_response(self, check_via_re, check_via_response, response_to_verify):
         flag = [0, 0, 0, 0]

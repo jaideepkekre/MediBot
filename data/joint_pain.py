@@ -4,8 +4,7 @@
 # _info_   = Questions for join pain.
 
 def data():
-    return
-    {
+    return {
         'joint_pain_area' : {
             'question' : "Which joints hurt the most?",
             'response' : ['Knees', 'Elbows', 'Shoulders', 'Fingers'],

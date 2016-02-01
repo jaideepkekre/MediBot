@@ -4,8 +4,7 @@
 # _info_   = Questions for body pain.
 
 def data():
-    return
-    {
+    return {
         'body_pain_area' : {
             'question' : "Where are you experiencing pain the most?",
             'response' : ['Head', 'Chest', 'Stomach', 'Hands', 'Legs'],
