@@ -4,7 +4,7 @@
 # and generate  
 from random import randint
 
-from db_store import populate
+from db_store import db
 from question_interface import question_interface
 from telegram_interface import create_keyboard
 
@@ -15,7 +15,7 @@ class expert_system:
     """
 
     def __init__(self):
-        self.db_object = populate()
+        self.db_object = db()
         self.top_questions = list()
         self.top_questions_asked = list()
         self.question = question_interface()

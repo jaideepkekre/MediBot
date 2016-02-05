@@ -7,11 +7,10 @@ from question_interface import question_interface
 from helper import bcolors
 import redis
 
-class populate(object):
-    """docstring for populate"""
+class db(object):
 
     def __init__(self):
-        super(populate, self).__init__()
+        super(db, self).__init__()
         self.connection = redis.Redis(
             host='localhost',
             port=6379, 
@@ -45,7 +44,7 @@ class populate(object):
 
 
 def test():
-    d = populate()
+    d = db()
     x = d.poplulate_questions_top()
 
 

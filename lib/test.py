@@ -4,23 +4,10 @@
 # author : @v0dro
 
 from dispatcher import dispatcher
-
-
-class bcolors:
-    """Pretty colours for the terminal"""
-
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
+from helper import bcolors
 
 class tester(object):
-    """defines methods for easy testing"""
+    """this class is deprecated for now. stay tuned."""
 
     def __init__(self):
         self.creator = dispatcher()
@@ -64,7 +51,43 @@ t = tester()
 # bot  - Does anybody else in your household or neighbours have fever too?
 # user - Yes. My mother and sister.
 
-t.user("I have a fever")
-t.bot("Please tell your temperature after measuring with a thermometer.")
-t.user("103")
-t.bot("Alright. What is your age?")
+import unittest
+
+class TestDBWithScratchPad(unittest.TestCase):
+    def setUp(self):
+        from scratch_pad import scratch_pad
+        from db_store import db
+
+        self.database = db()
+        self.scratch = scratch_pad()
+        self.database.set_scratch_pad(scratch)
+
+    def test_get_unanswered_questions(self):
+        questions = self.database.get_unanswered_questions(['fever'])
+        fever = __import__('fever').data()
+
+        self.assertEqual(questions.size(), 2)
+        self.assertEqual(questions[0].question, fever['fever_measure']['question'])
+        self.assertEqual(questions[1].question, fever['fever_periodic']['question'])
+
+        self.scratch.set(['fever', 'fever_measure'])
+        questions = self.database.get_unanswered_questions(['fever'])
+
+        self.assertEqual(questions.size(), 1)
+        self.assertEqual(questions[0].question, fever['fever_periodic']['question'])
+
+    def test_get_specific_questions(self):
+        inner_question = self.database.get_specific_question(['body_pain', 'body_pain_area'])
+        body_pain = __import__('body_pain').data()
+
+        self.assertEqual(inner_question.question, body_pain['body_pain_area']['question'])
+        self.assertEqual(inner_question.linked_questions.question, \
+            body_pain['body_pain_area']['linked_questions']['question'])
+
+        self.scratch.set(['body_pain', 'body_pain_area'])
+        inner_question = self.database.get_specific_question(['body_pain', 'body_pain_area'])
+
+        self.assertEqual(inner_question, None)
+
+if __name__ == '__main__':
+    unittest.main()
