@@ -72,15 +72,34 @@ class scratch_pad():
     more nested dicts are detected, a list containing the names of sub-tags which
     have 'status' set to 'None' will be returned.
 
+    If the second optional argument is passed as True, then only the status of 
+    the top level tag will be checked and returned. Function will not dive 
+    further.
+
     Example:
         query(['fever'])
         # => ['fever_periodic', 'fever_measure']
 
+        query(['fever'], True)
+        # => None
+
         query(['fever', 'fever_periodic'])
         # => None
     """
-    def query(self, tag_list):
-        pass
+    def query(self, tag_list, only_top_tag=False):
+        temp = self.data
+        for tag in tag_list:
+            temp = temp[tag]
+
+        if only_top_tag or temp.keys() == ['status']:
+            return temp['status']
+
+        return_tag_list = list()
+        for inner_tag in temp:
+            if temp['status'] == None and inner_tag != 'status':
+                return_tag_list.append(inner_tag)                
+
+        return return_tag_list
 
     """
     Use this method for setting the status of a given tag/sub-tag combination.
@@ -96,27 +115,34 @@ class scratch_pad():
         # to True
     """
     def set(self, tag_list, status=True):
-        pass
-
+        temp = self.data
+        for tag in tag_list:
+            temp = temp[tag]
+            temp['status'] = status
 
 if __name__ == '__main__':
     sp = scratch_pad()
 
     d = getattr(sp, 'data')
     if d['fever']['status'] == None and d['joint_pain']['joint_pain_area']['joint_pain_area_more_pain']['status'] == None:
-        print "PASS"
+        print "PASS1"
 
     if sp.query(['fever']) == ['fever_periodic', 'fever_measure']:
-        print "PASS"
+        print "PASS2"
+
+    if sp.query(['fever'], True) == None:
+        print "PASS3"
 
     sp.set(['fever'])
-    d = getattr(sp, 'data')
+    if sp.query(['fever'], True) == True:
+        print "PASS4"
 
-    if d['fever'] == True:
-        print "PASS"
+    sp.set(['fever', 'fever_measure'])
+    if sp.query(['fever', 'fever_measure']) == True:
+        print "PASS5"
 
     sp.set(['joint_pain', 'joint_pain_area'])
     d = getattr(sp, 'data')
 
-    if d['joint_pain']['status'] == True and d['joint_pain']['joint_pain_area'] == True:
-        print "PASS"
+    if d['joint_pain']['status'] == True and d['joint_pain']['joint_pain_area']['status'] == True:
+        print "PASS6"
