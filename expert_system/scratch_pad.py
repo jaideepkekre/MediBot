@@ -41,7 +41,29 @@ class scratch_pad():
 
 
     def _build_scratch_pad(self):
-        pass
+        self.data = dict()
+        for tag in __import__('top_questions').data().keys():
+            self.data[tag] = dict()
+
+        for top_tag in self.data:
+            tag_scratch_pad = self.data[top_tag]
+            tag_scratch_pad['status'] = None
+            sub_tags_data_dict = __import__(top_tag).data()
+
+            for sub_tag, sub_tag_data in sub_tags_data_dict.iteritems():
+                tag_scratch_pad[sub_tag] = {}
+                tag_scratch_pad[sub_tag]['status'] = None
+                temp = sub_tag_data
+                sub_tag_scratch = tag_scratch_pad[sub_tag]
+
+                while sub_tag_data.has_key('linked_questions'):
+                    sub_tag_data = sub_tag_data['linked_questions']
+
+                    linked_tag = sub_tag_data['tag']
+                    sub_tag_scratch[linked_tag] = {}
+                    sub_tag_scratch[linked_tag]['status'] = None
+
+                    sub_tag_scratch = sub_tag_scratch[linked_tag]
 
     """
     Send a list of tags and sub tags to check status.
@@ -89,7 +111,7 @@ if __name__ == '__main__':
 
     sp.set(['fever'])
     d = getattr(sp, 'data')
-    
+
     if d['fever'] == True:
         print "PASS"
 
