@@ -76,7 +76,7 @@ class TestDBWithScratchPad(unittest.TestCase):
         self.assertEqual(questions.size(), 1)
         self.assertEqual(questions[0].question, fever['fever_periodic']['question'])
 
-    def test_get_specific_questions(self):
+    def test_get_specific_question(self):
         inner_question = self.database.get_specific_question(['body_pain', 'body_pain_area'])
         body_pain = __import__('body_pain').data()
 

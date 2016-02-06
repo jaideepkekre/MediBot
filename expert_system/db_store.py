@@ -5,47 +5,69 @@
 
 from question_interface import question_interface
 from helper import bcolors
+from scratch_pad import scratch_pad
 import redis
 
 class db(object):
 
     def __init__(self):
-        super(db, self).__init__()
+        self.connection = None
+        self.scratch_pad = None
+
+    def connect_redis(self):
         self.connection = redis.Redis(
             host='localhost',
             port=6379, 
             password='')
 
+    """
+    Get redis connection object.
+
+    Must call connect_redis() before invoking this method.
+    """
+    def redis_connection(self):
+        return self.connection
 
     """
-    A 'top question' refers to a question that is the starting point to gain
-    more information about a particular symptom.
-
-    For example, the question that asks 'Do you have a fever?' and then prompts
-    the user to tell more about the fever if he answers 'yes' is a top question.
+    Set the scratch pad to a scratch_pad() object.
     """
-    def poplulate_questions_top(self):
-        list_of_questions_top = list()
-        q = question_interface()
-        q.question = "Do you have a fever ?"
-        q.response = ['yes', 'no']
-        q.response_type = 'ruledchar'
-        q.tag = 'fever'
-        list_of_questions_top.append(q)
-        q = question_interface()
-        q.question = "Do you have body pain ?"
-        q.response = ['yes', 'no']
-        q.response_type = 'ruledchar'
-        q.tag = 'bodypain'
-        list_of_questions_top.append(q)
+    def set_scratch_pad(self, s):
+        if str(s.__class__) != 'scratch_pad.scratch_pad':
+            raise(TypeError("You must pass a scratch_pad object."))
 
-        print list_of_questions_top
-        return list_of_questions_top
+        self.scratch_pad = s
+
+
+    """
+    Get a list of question_interface() elements that contain the questions within
+    the top level tags that have not yet been answered yet.
+
+    The tag_list should contain only top level tags. All the unanswered questions
+    under those tags will be returned in a list.
+    """
+    def get_unanswered_questions(self, tag_list):
+        pass
+
 
 
 def test():
+    from scratch_pad import scratch_pad
+
+    s = scratch_pad()
     d = db()
-    x = d.poplulate_questions_top()
+
+    d.set_scratch_pad(s)
+
+    if getattr(d, 'scratch_pad') == s:
+        print "PASS1"
+
+    l = d.get_unanswered_questions(['fever'])
+    if l.size() == 2:
+        print "PASS2"
+
+    if l[0].serial == 0:
+        print "PASS3"
+
 
 
 if __name__ == '__main__':
