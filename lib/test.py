@@ -60,20 +60,20 @@ class TestDBWithScratchPad(unittest.TestCase):
 
         self.database = db()
         self.scratch = scratch_pad()
-        self.database.set_scratch_pad(scratch)
+        self.database.set_scratch_pad(self.scratch)
 
     def test_get_unanswered_questions(self):
         questions = self.database.get_unanswered_questions(['fever'])
         fever = __import__('fever').data()
 
-        self.assertEqual(questions.size(), 2)
+        self.assertEqual(len(questions), 2)
         self.assertEqual(questions[0].question, fever['fever_measure']['question'])
         self.assertEqual(questions[1].question, fever['fever_periodic']['question'])
 
         self.scratch.set(['fever', 'fever_measure'])
         questions = self.database.get_unanswered_questions(['fever'])
 
-        self.assertEqual(questions.size(), 1)
+        self.assertEqual(len(questions), 1)
         self.assertEqual(questions[0].question, fever['fever_periodic']['question'])
 
     def test_get_specific_question(self):

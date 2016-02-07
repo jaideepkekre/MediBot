@@ -87,17 +87,24 @@ class scratch_pad():
         # => None
     """
     def query(self, tag_list, only_top_tag=False):
-        temp = self.data
-        for tag in tag_list:
-            temp = temp[tag]
+        if len(tag_list) > 2:
+            raise AttributeError("Cannot have hierarchy deeper than 2.")
 
-        if only_top_tag or temp.keys() == ['status']:
-            return temp['status']
+        if only_top_tag:
+            return self.data[tag_list[0]]['status']
 
+        temp = self.data[tag_list[0]]
+
+        if len(tag_list) == 2:
+            return temp[tag_list[1]]['status']
+        
         return_tag_list = list()
         for inner_tag in temp:
-            if temp['status'] == None and inner_tag != 'status':
+            if inner_tag != 'status' and temp[inner_tag]['status'] == None:
                 return_tag_list.append(inner_tag)                
+
+        if len(return_tag_list) == 0:
+            return None
 
         return return_tag_list
 
@@ -138,8 +145,12 @@ if __name__ == '__main__':
         print "PASS4"
 
     sp.set(['fever', 'fever_measure'])
-    if sp.query(['fever', 'fever_measure']) == True:
+    print sp.query(['fever', 'fever_measure'])
+    print sp.query(['fever'])
+    if sp.query(['fever', 'fever_measure']) == True and sp.query(['fever', 'fever_periodic']) == None \
+    and sp.query(['fever']) == ['fever_periodic']:
         print "PASS5"
+
 
     sp.set(['joint_pain', 'joint_pain_area'])
     d = getattr(sp, 'data')

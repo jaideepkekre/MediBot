@@ -7,7 +7,6 @@ class question_interface_helper():
     """
     This class loads questions from data/ into legit question_interface objects.
     """
-
     def __init__(self):
         pass
 
@@ -15,7 +14,6 @@ class question_interface_helper():
     @private
     assign attributes
     """
-
     @classmethod
     def _assign_attributes(self, q_interface, value, tag):
         q_interface.tag = value.get('tag') or tag
@@ -52,6 +50,10 @@ class question_interface_helper():
 
         return q
 
+    """
+    This method will load ALL the questions present in top_questions.py into
+    question_interface objects and return a list of them.
+    """
     @classmethod
     def load_top_questions(self):
         from top_questions import data
@@ -66,6 +68,17 @@ class question_interface_helper():
 
         return top_questions_list
 
+    """
+    This method loads questions linked to a particular symptom tag and returns
+    list ordered by the 'serial' attribute of the question.
+
+    arg description:
+    * linked_question_tag (def: None) - Specifying a tag here will only return
+    the question that has a tag corresponding to the linked_question_tag.
+
+    * serial (def: None) - Specifying a number here will return only the question
+    that has 'serial' corresponding to serial.
+    """
     @classmethod
     def load_linked_questions(self, symptom_tag, linked_question_tag=None, serial=None):
 
