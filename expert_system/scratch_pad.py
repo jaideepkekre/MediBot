@@ -3,6 +3,7 @@
 # _author_ =  @v0dro
 # _info_   = Scratch pad for keeping track of which questions have been asked
 #   and their status.
+from symptom_validity_table import symptom_validity_table
 
 class scratch_pad():
     """
@@ -13,57 +14,44 @@ class scratch_pad():
     'None' says that the question has not been answered at all. True says that
     the symptom is present, False says that it is absent altogether.
 
-    It does by storing them in a nested dict. Example,
-    {
-        'fever' : {
-            'status' : None, # None if not yet asked, True if yes, False if not
-            'fever_measure' : {
-                'status' : None
-            },
-            'fever_periodic' : {
-                'status' : None
-            }
-        },
-        'joint_pain' : {
-            'status' : None,
-            'joint_pain_area' : {
-                'status' : None,
-                'joint_pain_area_more_pain' : {
-                    'status' : None
-                }
-            }
+    The data is primarily reffered to and infered from 2 data structures:
+    * symptom_validity_table
+        This is a table, or rather a separate class that contains key value
+        pairs denoting symtpom tag vs. its truth value. The value can be
+        either None, True or False. See the symptom_validity_table() class 
+        for more details on this.
+    * data
+        This is an internal DS that stores the top level tags as the key, the
+        corresponding value is a list that contains the sub symptoms of the key.
+
+        In case of nested questions the tags are kept inside a list, the elements
+        of the list being the question tags in the order that they should be asked.
+        The data is structured as follows:
+        {
+            'fever' : ['fever_periodic', 'fever_measure'],
+            'body_pain' : [['body_pain_area', 'body_pain_area_more_pain']]
         }
-    }
     """
     def __init__(self):
         self.data = None
-        self._build_scratch_pad()
+        self.symptom_validity_table = symptom_validity_table()
+        self._build_data()
 
-
-    def _build_scratch_pad(self):
+    def _build_data(self):
         self.data = dict()
-        for tag in __import__('top_questions').data().keys():
-            self.data[tag] = dict()
+        top_tags = __import__('top_questions').data().keys()
 
-        for top_tag in self.data:
-            tag_scratch_pad = self.data[top_tag]
-            tag_scratch_pad['status'] = None
+        for top_tag in top_tags:
+            self.data[top_tag] = list()
             sub_tags_data_dict = __import__(top_tag).data()
 
             for sub_tag, sub_tag_data in sub_tags_data_dict.iteritems():
-                tag_scratch_pad[sub_tag] = {}
-                tag_scratch_pad[sub_tag]['status'] = None
-                temp = sub_tag_data
-                sub_tag_scratch = tag_scratch_pad[sub_tag]
+                self.data[sub_tag] = None
 
                 while sub_tag_data.has_key('linked_questions'):
                     sub_tag_data = sub_tag_data['linked_questions']
-
                     linked_tag = sub_tag_data['tag']
-                    sub_tag_scratch[linked_tag] = {}
-                    sub_tag_scratch[linked_tag]['status'] = None
-
-                    sub_tag_scratch = sub_tag_scratch[linked_tag]
+                    self.data[linked_tag] = None
 
     """
     Send a list of tags and sub tags to check status.
@@ -130,8 +118,9 @@ class scratch_pad():
 if __name__ == '__main__':
     sp = scratch_pad()
 
-    d = getattr(sp, 'data')
-    if d['fever']['status'] == None and d['joint_pain']['joint_pain_area']['joint_pain_area_more_pain']['status'] == None:
+    table = getattr(sp, 'symptom_validity_table')
+
+    if str(table.__class__) == 'symptom_validity_table.symptom_validity_table':
         print "PASS1"
 
     if sp.query(['fever']) == ['fever_periodic', 'fever_measure']:
