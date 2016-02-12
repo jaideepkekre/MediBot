@@ -46,17 +46,15 @@ class db(object):
     The tag_list should contain only top level tags. All the unanswered questions
     under those tags will be returned in a list.
     """
-    def get_unanswered_questions(self, tag_list):
-        final_questions_list = []
-        for tag in tag_list:
-            pending_question_tags = self.scratch_pad.query([tag])
-            all_questions = question_interface_helper.load_linked_questions(tag)
+    def get_next_unanswered_question(self, tag):
+        pending_question_tags = self.scratch_pad.query(tag)
+        if len(pending_question_tags) == 0:
+            return None
 
-            for index, question in enumerate(all_questions):
-                if question.tag in pending_question_tags:
-                    final_questions_list.append(question)
-
-        return final_questions_list
+        last_unanswered_tag = pending_question_tags[0]
+        self.scratch_pad.pop(tag)
+        return question_interface_helper.load_linked_questions(
+            tag, last_unanswered_tag)[0]
 
 
     """
@@ -66,7 +64,8 @@ class db(object):
     Return None otherwise.
     """
     def get_specific_question(self, tag_hierarchy):
-        if self.scratch_pad.query(tag_hierarchy) == None:
+        if self.scratch_pad.query(tag_hierarchy[1]) == None:
+            self.scratch_pad.pop_specific(tag_hierarchy)
             return question_interface_helper.load_linked_questions(
                 tag_hierarchy[0], tag_hierarchy[1])[0]
 
@@ -83,11 +82,11 @@ def test():
     if getattr(d, 'scratch_pad') == s:
         print "PASS1"
 
-    l = d.get_unanswered_questions(['fever'])
-    if len(l) == 2:
+    l = d.get_next_unanswered_question('fever')
+    if l.question == "Please measure your fever with a thermometer and tell us your temperature.":
         print "PASS2"
 
-    if l[0].serial == 0:
+    if l.serial == 0:
         print "PASS3"
 
     q = d.get_specific_question(['body_pain', 'body_pain_area'])

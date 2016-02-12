@@ -4,6 +4,16 @@
 # _info_   = Table which stores state of symptoms
 
 class symptom_validity_table(object):
+    """
+    This class maintains a table that contains the state of each symptom.
+
+    Each symptom tag is stored with its respective state:
+    {
+        'fever' : None,
+        'fever_periodic' : None,
+        # ....
+    }
+    """
     def __init__(self):
         self.data = dict()
         top_tags = __import__('top_questions').data().keys()
@@ -29,6 +39,9 @@ class symptom_validity_table(object):
     def get(self, tag):
         return self.data[tag]
 
+    """
+    Subtract one symptom_validity_table from another to get the diff as a list.
+    """
     def __sub__(self, other):
         d = getattr(other, 'data')
         tags = list()

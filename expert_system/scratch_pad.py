@@ -35,66 +35,66 @@ class scratch_pad():
     def __init__(self):
         self.data = None
         self.symptom_validity_table = symptom_validity_table()
+        self.top_tags = __import__('top_questions').data().keys()
         self._build_data()
 
     def _build_data(self):
         self.data = dict()
-        top_tags = __import__('top_questions').data().keys()
-
-        for top_tag in top_tags:
+        
+        for top_tag in self.top_tags:
             self.data[top_tag] = list()
             sub_tags_data_dict = __import__(top_tag).data()
+            size = len(sub_tags_data_dict)
 
-            for sub_tag, sub_tag_data in sub_tags_data_dict.iteritems():
-                self.data[sub_tag] = None
+            # aligns questions by serial because python does not guarantee order
+            #   of dict :\
+            for serial in range(0,size):
+                inner_tag = None
+                eventual_data = None
+                for t in sub_tags_data_dict:
+                    if sub_tags_data_dict[t]['serial'] == serial:
+                        inner_tag = t
+                        break
 
-                while sub_tag_data.has_key('linked_questions'):
-                    sub_tag_data = sub_tag_data['linked_questions']
-                    linked_tag = sub_tag_data['tag']
-                    self.data[linked_tag] = None
+                if sub_tags_data_dict[inner_tag].has_key('linked_questions'):
+                    eventual_data = list()
+                    eventual_data.append(inner_tag)
+                    temp = sub_tags_data_dict[inner_tag]
+
+                    while temp.has_key('linked_questions'):
+                        temp = temp['linked_questions']
+                        eventual_data.append(temp['tag'])
+                else:
+                    eventual_data = inner_tag
+
+                self.data[top_tag].append(eventual_data)
 
     """
     Send a list of tags and sub tags to check status.
-
-    The tags listed in the list should be nested. If at the end of the traversal
-    more nested dicts are detected, a list containing the names of sub-tags which
-    have 'status' set to 'None' will be returned.
 
     If the second optional argument is passed as True, then only the status of 
     the top level tag will be checked and returned. Function will not dive 
     further.
 
     Example:
-        query(['fever'])
-        # => ['fever_periodic', 'fever_measure']
+        query('fever')
+        # => 'fever_periodic'
 
-        query(['fever'], True)
-        # => None
+        set('fever_measure')
+        query('fever')
+        # => 'fever_measure'
 
-        query(['fever', 'fever_periodic'])
+        query('fever_periodic')
         # => None
     """
-    def query(self, tag_list, only_top_tag=False):
-        if len(tag_list) > 2:
-            raise AttributeError("Cannot have hierarchy deeper than 2.")
+    def query(self, tag, only_top_tag=False):
+        if tag in self.top_tags:
+            if only_top_tag:
+                return self.symptom_validity_table.get(tag)
 
-        if only_top_tag:
-            return self.data[tag_list[0]]['status']
+            return self.data[tag]
 
-        temp = self.data[tag_list[0]]
-
-        if len(tag_list) == 2:
-            return temp[tag_list[1]]['status']
-        
-        return_tag_list = list()
-        for inner_tag in temp:
-            if inner_tag != 'status' and temp[inner_tag]['status'] == None:
-                return_tag_list.append(inner_tag)                
-
-        if len(return_tag_list) == 0:
-            return None
-
-        return return_tag_list
+        return self.symptom_validity_table.get(tag)
 
     """
     Use this method for setting the status of a given tag/sub-tag combination.
@@ -102,47 +102,82 @@ class scratch_pad():
     in the list will be set to True (default).
 
     Example:
-        set(['fever'])
-        # This will set ['fever']['status'] to True
-
-        set(['fever', 'fever_periodic'])
-        # This will set ['fever']['status'] and ['fever']['fever_periodic']['status']
-        # to True
+        set('fever')
+        # This will set 'fever' to True
     """
-    def set(self, tag_list, status=True):
-        temp = self.data
-        for tag in tag_list:
-            temp = temp[tag]
-            temp['status'] = status
+    def set_top_level(self, tag, status=True):
+        if tag in self.top_tags:
+            self.symptom_validity_table.set(tag, status)
+        else:
+            raise AttributeError("bad..bad input " + tag)
+
+    """
+    This will remove the first sub_tag from the tags dict
+    """
+    def pop(self, tag):
+        popped = self.data[tag].pop(0)
+        if type(popped) == list:
+            for pop in popped:
+                self.symptom_validity_table.set(pop)
+        else:
+            self.symptom_validity_table.set(popped)
+
+    """
+    Remove a specific sub tag from top tag dict.
+    """
+    def pop_specific(self, tag_hierarchy):
+        tag_list = self.data[tag_hierarchy[0]]
+        index = None
+
+        for idx, tag in enumerate(tag_list):
+            if type(tag) == list:
+                if tag_hierarchy[1] == tag[0]:
+                    index = idx
+                    break
+            else:
+                if tag_hierarchy[1] == tag:
+                    index = idx
+                    break
+
+        popped = tag_list[index]
+        if type(popped) == list:
+            for pop in popped:
+                self.symptom_validity_table.set(pop)
+        else:
+            self.symptom_validity_table.set(popped)
+
+        del tag_list[index]
+
 
 if __name__ == '__main__':
     sp = scratch_pad()
-
     table = getattr(sp, 'symptom_validity_table')
 
-    if str(table.__class__) == 'symptom_validity_table.symptom_validity_table':
+    p = getattr(sp, 'data')
+
+    if p['fever'] == ['fever_measure', 'fever_periodic'] and \
+    p['body_pain'] == [['body_pain_area', 'body_pain_area_more_pain']]:
         print "PASS1"
 
-    if sp.query(['fever']) == ['fever_periodic', 'fever_measure']:
+    if sp.query('fever') == ['fever_measure', 'fever_periodic']:
         print "PASS2"
 
-    if sp.query(['fever'], True) == None:
+    if sp.query('fever', True) == None:
         print "PASS3"
 
-    sp.set(['fever'])
-    if sp.query(['fever'], True) == True:
+    sp.set_top_level('fever')
+    if sp.query('fever', True) == True:
         print "PASS4"
 
-    sp.set(['fever', 'fever_measure'])
-    print sp.query(['fever', 'fever_measure'])
-    print sp.query(['fever'])
-    if sp.query(['fever', 'fever_measure']) == True and sp.query(['fever', 'fever_periodic']) == None \
-    and sp.query(['fever']) == ['fever_periodic']:
+    sp.pop('fever')
+    if sp.query('fever_measure') == True and sp.query('fever_periodic') == None \
+    and sp.query('fever') == ['fever_periodic']:
         print "PASS5"
 
-
-    sp.set(['joint_pain', 'joint_pain_area'])
-    d = getattr(sp, 'data')
-
-    if d['joint_pain']['status'] == True and d['joint_pain']['joint_pain_area']['status'] == True:
+    sp.pop_specific(['fever', 'fever_measure'])
+    if sp.query('fever_periodic') == True and sp.query('fever') == []:
         print "PASS6"
+
+    # sp.set('joint_pain_area')
+    # sp.set('joint_pain')
+    # d = getattr(sp, 'data')

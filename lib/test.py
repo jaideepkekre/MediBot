@@ -62,29 +62,24 @@ class TestDBWithScratchPad(unittest.TestCase):
         self.scratch = scratch_pad()
         self.database.set_scratch_pad(self.scratch)
 
-    def test_get_unanswered_questions(self):
-        questions = self.database.get_unanswered_questions(['fever'])
+    def test_get_next_unanswered_question(self):
         fever = __import__('fever').data()
 
-        self.assertEqual(len(questions), 2)
-        self.assertEqual(questions[0].question, fever['fever_measure']['question'])
-        self.assertEqual(questions[1].question, fever['fever_periodic']['question'])
+        question = self.database.get_next_unanswered_question('fever')
+        self.assertEqual(question.question, fever['fever_measure']['question'])
 
-        self.scratch.set(['fever', 'fever_measure'])
-        questions = self.database.get_unanswered_questions(['fever'])
-
-        self.assertEqual(len(questions), 1)
-        self.assertEqual(questions[0].question, fever['fever_periodic']['question'])
+        question = self.database.get_next_unanswered_question('fever')
+        self.assertEqual(question.question, fever['fever_periodic']['question'])
 
     def test_get_specific_question(self):
         inner_question = self.database.get_specific_question(['body_pain', 'body_pain_area'])
         body_pain = __import__('body_pain').data()
 
-        self.assertEqual(inner_question.question, body_pain['body_pain_area']['question'])
+        self.assertEqual(inner_question.question, 
+            body_pain['body_pain_area']['question'])
         self.assertEqual(inner_question.linked_questions.question, \
             body_pain['body_pain_area']['linked_questions']['question'])
 
-        self.scratch.set(['body_pain', 'body_pain_area'])
         inner_question = self.database.get_specific_question(['body_pain', 'body_pain_area'])
 
         self.assertEqual(inner_question, None)
