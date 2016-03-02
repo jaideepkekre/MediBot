@@ -26,10 +26,18 @@ class InitBucket:
         dengue.set('pain_behind_eyes', True)
 
         dengue.set_score('fever', 10)
-        dengue.set_score('fever', 20)
+        dengue.set_score('fever_measure', 20)
         dengue.set_score('body_pain', 10)
         dengue.set_score('joint_pain', 10)
         dengue.set_score('pain_behind_eyes', 5)
+
+        """
+        Critical symptom : 20 #Disease can't be characterized without this .
+        Important symptom: 10 #Important symptoms , common to multiple diseases.
+        Optional symptoms: 5  #Symptoms which the patient may not exhibit .
+
+
+        """
 
 
 
