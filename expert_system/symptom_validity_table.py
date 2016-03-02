@@ -13,9 +13,13 @@ class symptom_validity_table(object):
         'fever_periodic' : None,
         # ....
     }
+
+
+    Score is to be only used by buckets to set the score for each symptom
     """
     def __init__(self):
         self.data = dict()
+
         top_tags = __import__('top_questions').data().keys()
 
         for top_tag in top_tags:
@@ -29,6 +33,7 @@ class symptom_validity_table(object):
                     sub_tag_data = sub_tag_data['linked_questions']
                     linked_tag = sub_tag_data['tag']
                     self.data[linked_tag] = None
+        self.score = dict(self.data)
 
     def set(self, tag, value=True):
         if self.data.has_key(tag):
@@ -38,6 +43,15 @@ class symptom_validity_table(object):
 
     def get(self, tag):
         return self.data[tag]
+
+    def set_score(self, tag, value=True):
+        if self.score.has_key(tag):
+            self.score[tag] = value
+        else:
+            raise AttributeError("Non existent key " + tag)
+
+    def get_score(self, tag):
+        return self.score[tag]
 
     """
     Subtract one symptom_validity_table from another to get the diff as a list.
