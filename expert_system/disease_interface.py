@@ -24,7 +24,7 @@ Optional symptoms: 5  #Symptoms which the patient may not exhibit .
 class Buckets:
     def __init__(self):
         self.bucket  = dict()
-        self.symptom_score= [0]*11
+        self.symptom_score= [0]*12
         self.symptom_index = dict()
 
         self.init_index()
@@ -46,63 +46,42 @@ class Buckets:
         self.symptom_index['yellow_eyes']=8
         self.symptom_index['clay_coloured_bowels']=9
         self.symptom_index['nausea']=10
+        self.symptom_index['fever_measure']=11
         #Add new symptom here
     def init_bucket(self):
         self.bucket['dengue']=None
         self.bucket['hepA']=None
         #Add new symptom here 
 
-    def add_score(self,symptom,score,disease):
+    def add_score(self,symptom,score,disease,arg=True):
         self.symptom_score[self.symptom_index[symptom]] =  self.symptom_score[self.symptom_index[symptom]]+score
         disease.set_score(symptom,score)
+        disease.set(symptom,arg)
 
 
 
     def populate_dengue(self):
 
-        dengue = symptom_validity_table()
-        dengue.set('fever', True)
-        dengue.set('fever_measure', [105, 110])
-        dengue.set('rash', True)
-        dengue.set('body_pain', True)
-        dengue.set('joint_pain', True)
-        dengue.set('pain_behind_eyes', True)
-        #
-        self.add_score('fever',(IMPORTANT+CRITICAL),dengue)
-        self.add_score('body_pain',IMPORTANT,dengue)
-        self.add_score('joint_pain',IMPORTANT,dengue)
-        self.add_score('pain_behind_eyes' ,OPTIONAL,dengue)
-        self.add_score('rash',OPTIONAL,dengue)
-        #
-        self.bucket['dengue']=dengue
-        """
-        #dengue.set_score('fever', IMPORTANT)
-        #dengue.set_score('fever_measure', CRITICAL)
-        #dengue.set_score('body_pain', IMPORTANT)
-        #dengue.set_score('joint_pain', IMPORTANT)
-        #dengue.set_score('pain_behind_eyes', OPTIONAL)
-        #dengue.set_score('rash',OPTIONAL)
-        #
-        """
+        disease = symptom_validity_table()
+        self.add_score('fever',IMPORTANT,disease)
+        self.add_score('fever_measure',CRITICAL,disease,[105,110])
+        self.add_score('body_pain',IMPORTANT,disease)
+        self.add_score('joint_pain',IMPORTANT,disease)
+        self.add_score('pain_behind_eyes' ,OPTIONAL,disease)
+        self.add_score('rash',OPTIONAL,disease)
+        self.bucket['dengue']=disease       
 
 
 
 
     def populate_hepA(self):
-        hepA = symptom_validity_table()
-        hepA.set('fever', True)        
-        hepA.set('fatigue', True)
-        hepA.set('joint_pain', True)
-        hepA.set('clay_coloured_bowels', True)
-        hepA.set('yellow_eyes', True)
-        #
-        self.add_score('fever',(IMPORTANT),hepA)
-        self.add_score('fatigue',IMPORTANT,hepA)
-        self.add_score('joint_pain',IMPORTANT,hepA)
-        self.add_score('clay_coloured_bowels' ,OPTIONAL,hepA)
-        self.add_score('yellow_eyes',IMPORTANT,hepA)
-        #
-        self.bucket['hepA']=hepA
+        disease = symptom_validity_table()
+        self.add_score('fever',(IMPORTANT),disease)
+        self.add_score('fatigue',IMPORTANT,disease)
+        self.add_score('joint_pain',IMPORTANT,disease)
+        self.add_score('clay_coloured_bowels' ,OPTIONAL,disease)
+        self.add_score('yellow_eyes',IMPORTANT,disease)
+        self.bucket['hepA']=disease
 
         
 
