@@ -34,6 +34,8 @@ class symptom_validity_table(object):
                     linked_tag = sub_tag_data['tag']
                     self.data[linked_tag] = None
         self.score = dict(self.data)
+        for symptom in self.score.keys():
+            self.score[symptom]=0
 
     def set(self, tag, value=True):
         if self.data.has_key(tag):
@@ -44,7 +46,7 @@ class symptom_validity_table(object):
     def get(self, tag):
         return self.data[tag]
 
-    def set_score(self, tag, value=True):
+    def set_score(self, tag, value=0):
         if self.score.has_key(tag):
             self.score[tag] = value
         else:
