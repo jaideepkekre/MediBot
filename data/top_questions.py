@@ -7,7 +7,8 @@ def data():
     return  {
         'fever' : {
             'question' : "Do you have a fever?",
-            'response' : ['Yes', 'No'],
+            'response' : ['Yes, High (> 103 F)', 'Yes, Mild (101-103 F)', 
+                'Yes, Very Mild (99 - 101 F)', 'No'],
             'response_type' : 'ruledchar',
         },
         'body_pain' : {
