@@ -32,13 +32,18 @@ class Buckets:
         self.symptom_critical_count = dict()
         self.disease_score = dict()
         self.diseases_object = Disease()
+        self.removed_questions_list = list()
+
         self.populate_diseases()
+
 
     """
     <------------------------PUBLIC METHODS TO BY CALLED BY OUTSIDE MODULES----------------->
     """
     def get_score_by_symptom(self,symptom):
-        if symptom in self.symptom_score.keys():
+        if symptom in self.removed_questions_list:
+            return None
+        elif symptom in self.symptom_score.keys():
             return self.symptom_score[symptom]
         else:
             return None
@@ -46,7 +51,7 @@ class Buckets:
     def get_score_by_disease(self,disease_name):
         if disease_name in self.bucket.keys():
             self.calculate_current_score(disease_name)
-            return self.bucket[disease_name]
+            return self.disease_score[disease_name]
         else:
             return None
         pass
@@ -75,11 +80,32 @@ class Buckets:
                 if name == specific_disease_name:
                     disease_dict = diseases_dict[specific_disease_name]
                     for symptom in disease_dict.keys():
-                        self.remove_symptom_score(symptom, disease_dict)
+                        if symptom in self.removed_questions_list:
+                            pass
+                        else:
+                            self.remove_symptom_score(symptom, disease_dict)
                     self.bucket.pop(disease_dict['name'])
                     self.disease_score.pop(disease_dict['name'])
 
         pass
+
+    def question_asked(self, symptom):
+
+        for table_disease_object in self.bucket.values():
+            table_disease_object.set_score(symptom, 0)
+            table_disease_object.set(symptom, False)
+        if symptom in self.symptom_score.keys():
+            self.symptom_score.pop(symptom)
+        if symptom in self.symptom_critical_count.keys():
+            self.symptom_critical_count.pop(symptom)
+        for disease_name in self.bucket.keys():
+            self.calculate_current_score(disease_name)
+        self.removed_questions_list.append(symptom)
+
+
+
+
+
 
     """
     <---------------------------------------INTERNAL METHODS-------------------------------->
@@ -97,8 +123,8 @@ class Buckets:
             score=0
             for symptom in specific_disease_dict.keys():
                 if symptom == 'name':
-                    #print "Calulating Score for :" +
-
+                    pass
+                elif symptom in self.removed_questions_list:
                     pass
                 else:
                     temp=table_disease_object.get_score(symptom)
@@ -134,9 +160,8 @@ class Buckets:
                 self.symptom_critical_count[symptom] = self.symptom_critical_count[symptom] - 1
 
     def remove_symptom(self,symptom,disease_dict):
+
         self.remove_symptom_score(symptom, score)
-        #table_disease_object.set_score(symptom,score)
-        #table_disease_object.set(symptom,arg)
 
     """
     set_table():
@@ -196,24 +221,31 @@ if __name__ == '__main__':
     print "Contents of Bucket are :" + str((bucketlist.bucket))
     print(bucketlist.symptom_score)
     #bucketlist.get_score_by_disease('dengue')
-    bucketlist.get_score_by_disease('hepA')
+
+    print(bucketlist.get_score_by_disease('hepA'))
+    print(bucketlist.get_score_by_disease('dengue'))
+    print "*******************************"
+    bucketlist.question_asked('fever')
+    print(bucketlist.get_score_by_disease('hepA'))
+    print(bucketlist.get_score_by_disease('dengue'))
+
     bucketlist.get_score_by_symptom('fever')
     bucketlist.remove_disease('dengue')
     bucketlist.remove_disease('dengue')
     bucketlist.remove_disease('dengue')
     #bucketlist.get_score_by_disease('dengue')
     #bucketlist.get_score_by_disease('hepA')
-    print "Contents of Bucket are :" + str((bucketlist.bucket))
-    print(bucketlist.symptom_score)
-    print (bucketlist.disease_score)
-    lista = bucketlist.get_top_critical_symptoms(3)
-    listb = bucketlist.get_top_symptoms(3)
-    print lista
-    print listb
-    bucketlist.remove_disease('hepA')
-    listc = bucketlist.get_top_critical_symptoms(3)
-    listd = bucketlist.get_top_symptoms(3)
-    print listc
-    print listd
-    print bucketlist.symptom_critical_count
-    print bucketlist.symptom_score
+    # print "Contents of Bucket are :" + str((bucketlist.bucket))
+    # print(bucketlist.symptom_score)
+    # print (bucketlist.disease_score)
+    # lista = bucketlist.get_top_critical_symptoms(3)
+    # listb = bucketlist.get_top_symptoms(3)
+    # print lista
+    # print listb
+    # bucketlist.remove_disease('hepA')
+    # listc = bucketlist.get_top_critical_symptoms(3)
+    # listd = bucketlist.get_top_symptoms(3)
+    # print listc
+    # print listd
+    # print bucketlist.symptom_critical_count
+    # print bucketlist.symptom_score
