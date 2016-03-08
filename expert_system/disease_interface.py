@@ -89,6 +89,12 @@ class Buckets:
 
         pass
 
+    """
+    question_asked()
+    removes symptom from all diseases in symptom_validity_table objects
+    removes symptom from all scores
+    re-calculates score for all disease buckets
+    """
     def question_asked(self, symptom):
 
         for table_disease_object in self.bucket.values():
