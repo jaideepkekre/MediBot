@@ -28,40 +28,47 @@ Optional symptoms: 5  #Symptoms which the patient may not exhibit .
 class Buckets:
     def __init__(self):
         self.bucket  = dict()
+
+        # for algo1
         self.symptom_score = dict()
+        # for algo2
         self.symptom_critical_count = dict()
+        #for algo3
         self.top_value_bucket_symptoms = dict()
+
         self.disease_score = dict()
-        self.disease_top_score = dict()
+        self.disease_fraction_done = dict()
 
         self.diseases_object = Disease()
+
         self.removed_questions_list = list()
+        self.finished_diseases_list = list()
 
         self.populate_diseases()
+        self.disease_top_score = dict(self.disease_score)
 
 
     """
     <------------------------PUBLIC METHODS TO BY CALLED BY OUTSIDE MODULES----------------->
     """
-    def get_score_by_symptom(self,symptom):
-        if symptom in self.removed_questions_list:
-            return None
-        elif symptom in self.symptom_score.keys():
-            return self.symptom_score[symptom]
-        else:
-            return None
 
-    def get_score_by_disease(self,disease_name):
-        if disease_name in self.bucket.keys():
-            self.calculate_current_score(disease_name)
-            return self.disease_score[disease_name]
-        else:
-            return None
-        pass
+    def get_avg_fraction(self):
+        for disease_name in self.bucket.keys():
+            self.calculate_fraction(disease_name)
+            number = 1
+            fraction = float(0)
+        for fractions in self.disease_fraction_done.values():
+            number = number + 1
+            fraction = fraction + fractions
+        return fraction / float(number)
+
+
+
 
     """
     get_top_symptoms()
-    returns a ordered list of symptom(s) with the highest score
+    returns a ordered list of symptom(s) with the highest score across all diseases
+    for algo1
     """
 
     def get_popular_symptoms(self, number_of_symptoms=1):
@@ -70,13 +77,29 @@ class Buckets:
 
     """
     get_top_critical_symptoms()
-    returns a ordered list of symptom(s) with the highest critical count
+    returns a ordered list of symptom(s) with the highest critical count across all diseases
+    for algo2
     """
 
     def get_top_critical_symptoms(self, number_of_symptoms=1):
         top_symptoms = heapq.nlargest(number_of_symptoms, self.symptom_critical_count,
                                       key=self.symptom_critical_count.get)
         return top_symptoms
+
+    """
+    get_buckets_top_symptom()
+
+    returns a list of the top symptom in each  bucket
+    for algo3
+    """
+
+    def get_buckets_top_symptom(self, number_of_symptoms=1):
+        self.calculate_highest_symptom()
+        # print self.top_value_bucket_symptoms
+        list_symptom = top_symptoms = heapq.nlargest(number_of_symptoms, self.top_value_bucket_symptoms,
+                                                     key=self.top_value_bucket_symptoms.get)
+        return list_symptom
+
 
     '''
     remove_disease()
@@ -120,18 +143,31 @@ class Buckets:
             self.calculate_current_score(disease_name)
         self.removed_questions_list.append(symptom)
 
-    def get_top_bucket_symptom(self, number_of_symptoms=1):
-        self.calculate_highest_symptom()
-        # print self.top_value_bucket_symptoms
-        list_symptom = top_symptoms = heapq.nlargest(number_of_symptoms, self.top_value_bucket_symptoms,
-                                                     key=self.top_value_bucket_symptoms.get)
-        return list_symptom
+
 
 
 
     """
     <---------------------------------------INTERNAL METHODS-------------------------------->
     """
+
+    def get_score_by_symptom(self, symptom):
+        if symptom in self.removed_questions_list:
+            return None
+        elif symptom in self.symptom_score.keys():
+            return self.symptom_score[symptom]
+        else:
+            return None
+
+    def get_score_by_disease(self, disease_name):
+        if disease_name in self.bucket.keys():
+            self.calculate_current_score(disease_name)
+            return self.disease_score[disease_name]
+        else:
+            return None
+        pass
+
+
 
     """
     calculate_highest_symptom()
@@ -144,9 +180,9 @@ class Buckets:
     def calculate_highest_symptom(self):
         for disease_name in self.bucket:
             symptom = self.get_highest_symptom(disease_name)
-            print symptom + "is highest"
+            #print symptom + "is highest"
             score = self.bucket[disease_name].get_score(symptom)
-            print score
+            #print score
             self.update_top_value(symptom, score)
 
     '''
@@ -243,6 +279,24 @@ class Buckets:
             if disease_dict[symptom] == CRITICAL:
                 self.symptom_critical_count[symptom] = self.symptom_critical_count[symptom] - 1
 
+    """
+    calculates the fractional completion of a disease
+
+    """
+
+    def calculate_fraction(self, disease_name):
+        done = self.disease_top_score[disease_name] - self.disease_score[disease_name]
+        todo = self.disease_top_score[disease_name]
+
+        fractiondone = done / float(todo)
+        self.disease_fraction_done[disease_name] = fractiondone
+
+
+
+
+
+
+
 
 
     """
@@ -322,20 +376,40 @@ if __name__ == '__main__':
     # print (bucketlist.disease_score)
     lista = bucketlist.get_top_critical_symptoms(3)
     listb = bucketlist.get_popular_symptoms(3)
-    liste = bucketlist.get_top_bucket_symptom(3)
+    liste = bucketlist.get_buckets_top_symptom(3)
     print lista
     print listb
     print liste
 
     # bucketlist.remove_disease('hepA')
     bucketlist.remove_question_asked('fever')
+    print "*****************"
+    print(bucketlist.get_score_by_disease('hepA'))
+    print(bucketlist.get_score_by_disease('dengue'))
+    print(bucketlist.get_avg_fraction())
+
     bucketlist.remove_question_asked('fatigue')
+    print "*****************"
+    print(bucketlist.get_score_by_disease('hepA'))
+    print(bucketlist.get_score_by_disease('dengue'))
+    print(bucketlist.get_avg_fraction())
+
     bucketlist.remove_question_asked('joint_pain')
+    print "*****************"
+    print(bucketlist.get_score_by_disease('hepA'))
+    print(bucketlist.get_score_by_disease('dengue'))
+    print(bucketlist.get_avg_fraction())
+
     bucketlist.remove_question_asked('body_pain')
+    print "*****************"
+    print(bucketlist.get_score_by_disease('hepA'))
+    print(bucketlist.get_score_by_disease('dengue'))
+    print(bucketlist.get_avg_fraction())
+
     print "*****************"
     listc = bucketlist.get_top_critical_symptoms(3)
     listd = bucketlist.get_popular_symptoms(3)
-    listf = bucketlist.get_top_bucket_symptom(3)
+    listf = bucketlist.get_buckets_top_symptom(3)
     print listc
     print listd
     print listf
