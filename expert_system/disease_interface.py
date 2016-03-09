@@ -147,6 +147,12 @@ class Buckets:
                 if table_disease_object.get_score(symptom) == CRITICAL:
                     self.remove_disease(table_disease_name)
                     print table_disease_name + " removed"
+                if table_disease_object.get_score(symptom) == IMPORTANT:
+                    if table_disease_name in self.disease_about_to_removed:
+                        self.remove_disease(table_disease_name)
+                        print table_disease_name + " removed"
+                else:
+                    self.disease_about_to_removed.append(table_disease_name)
 
                 # print "Mismatch:" + str(symptom)
 
@@ -450,14 +456,14 @@ if __name__ == '__main__':
     print(bucketlist.get_score_by_disease('dengue'))
     print(bucketlist.get_avg_fraction())
 
-    bucketlist.answered_question_True('joint_pain','Yes')
+    bucketlist.answered_question_True('joint_pain', 'No')
     print "*****************"
     print(bucketlist.get_score_by_disease('hepA'))
     print(bucketlist.get_score_by_disease('dengue'))
     print(bucketlist.get_avg_fraction())
 
     bucketlist.answered_question_True('body_pain')
-    bucketlist.answered_question_True('clay_coloured_bowels')
+    bucketlist.answered_question_True('clay_coloured_bowels', 'No')
     bucketlist.answered_question_True('yellow_eyes')
     bucketlist.answered_question_True('pain_behind_eyes')
     bucketlist.answered_question_True('body_pain_muscles')
