@@ -61,8 +61,7 @@ class DoctorSkyNet(object):
         # print "sending"  + self.response
         self.bucket_object.answered_question_True(self.last_asked_question, self.response)
         if self.response == 'No' or self.response == 'False':
-            pass
-            # self.invalidate_question(self.last_asked_question)
+            self.invalidate_question(self.last_asked_question)
 
     def next_question(self):
         self.update_fractions()
@@ -130,6 +129,7 @@ class DoctorSkyNet(object):
             lista = self.question_structure_dict[question]
             if len(lista) > 0:
                 for question in lista:
+                    print question + " invalidated" + " for response " + self.response
                     self.bucket_object.answered_question_True(question, False)
 
     def askdoctor(self, response=None):
@@ -157,10 +157,10 @@ if __name__ == '__main__':
 
     obj.askdoctor("Yes")
     obj.askdoctor("Yes")
+    obj.askdoctor("No")
     obj.askdoctor("Yes")
     obj.askdoctor("Yes")
-    obj.askdoctor("Yes")
-    obj.askdoctor("Yes")
+    obj.askdoctor("No")
     obj.askdoctor("Yes")
     obj.askdoctor("Yes")
     obj.askdoctor("Yes")
