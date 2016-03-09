@@ -11,7 +11,9 @@ This module contains funtions to interact with diseases .
 import heapq
 
 from disease import Disease
+from disease_signatures import Disease_Signature
 from symptom_validity_table import symptom_validity_table
+
 
 CRITICAL = 20
 IMPORTANT= 10
@@ -39,10 +41,15 @@ class Buckets:
         self.disease_score = dict()
         self.disease_fraction_done = dict()
 
-        self.diseases_object = Disease()
+
 
         self.removed_questions_list = list()
         self.finished_diseases_list = list()
+        # stores the symptom that is not True / False
+        self.symptom_signature_needed = ['fever']
+
+        self.diseases_object = Disease()
+        self.disease_signature_object = Disease_Signature()
 
         self.populate_diseases()
         self.disease_top_score = dict(self.disease_score)
@@ -55,7 +62,7 @@ class Buckets:
     def get_avg_fraction(self):
         for disease_name in self.bucket.keys():
             self.calculate_fraction(disease_name)
-            number = 1
+            number = 0
             fraction = float(0)
         for fractions in self.disease_fraction_done.values():
             number = number + 1
@@ -159,6 +166,10 @@ class Buckets:
         else:
             return None
 
+    def get_symptom_by_disease(self, symptom, disease):
+        table = symptom_validity_table
+        table = self.bucket[disease]
+        return table.get(symptom)
     def get_score_by_disease(self, disease_name):
         if disease_name in self.bucket.keys():
             self.calculate_current_score(disease_name)
@@ -171,7 +182,7 @@ class Buckets:
 
     """
     calculate_highest_symptom()
-    populates the top_value dict
+    populates the top_value_bucket dict
 
     runs : get_highest_symptom
          : calculate_highest_symptom
@@ -181,9 +192,13 @@ class Buckets:
         for disease_name in self.bucket:
             symptom = self.get_highest_symptom(disease_name)
             #print symptom + "is highest"
-            score = self.bucket[disease_name].get_score(symptom)
-            #print score
-            self.update_top_value(symptom, score)
+            if symptom == None:
+                pass
+            else:
+
+                score = self.bucket[disease_name].get_score(symptom)
+                # print score
+                self.update_top_value(symptom, score)
 
     '''
     updates the symptom top_value dict
@@ -314,9 +329,14 @@ class Buckets:
     called by
           : populate_diseases
     """
-    def set_table(self,symptom,score,table_disease_object,arg=True):
-        table_disease_object.set_score(symptom,score)
-        table_disease_object.set(symptom,arg)
+
+    def set_table(self, symptom, score, table_disease_object, disease_name, arg=True):
+        table_disease_object.set_score(symptom, score)
+        if symptom in self.symptom_signature_needed:
+            table_disease_object.set(symptom, self.disease_signature_object.get_fever(disease_name))
+        else:
+            table_disease_object.set(symptom, arg)
+
         if table_disease_object.get_score(symptom) == CRITICAL:
             self.update_critical_count(symptom)
         self.add_symptom_score(symptom, score)
@@ -339,7 +359,7 @@ class Buckets:
                     print specific_disease_dict[symptom] + " : LOADED"
 
                 else:
-                    self.set_table(symptom,specific_disease_dict[symptom],new_table_obj)
+                    self.set_table(symptom, specific_disease_dict[symptom], new_table_obj, specific_disease_name)
             self.bucket[specific_disease_name]=new_table_obj
             self.calculate_current_score(specific_disease_dict['name'])
 
@@ -355,6 +375,7 @@ class Buckets:
 if __name__ == '__main__':
     bucketlist = Buckets()
     print "Contents of Bucket are :" + str((bucketlist.bucket))
+    print bucketlist.get_symptom_by_disease('fever', 'hepA')
     print(bucketlist.symptom_score)
     #bucketlist.get_score_by_disease('dengue')
 
@@ -374,11 +395,12 @@ if __name__ == '__main__':
     # print "Contents of Bucket are :" + str((bucketlist.bucket))
     # print(bucketlist.symptom_score)
     # print (bucketlist.disease_score)
-    lista = bucketlist.get_top_critical_symptoms(3)
-    listb = bucketlist.get_popular_symptoms(3)
-    liste = bucketlist.get_buckets_top_symptom(3)
-    print lista
+    lista = bucketlist.get_top_critical_symptoms()
+    listb = bucketlist.get_popular_symptoms()
+    liste = bucketlist.get_buckets_top_symptom()
+    print bucketlist.get_symptom_by_disease('fever', 'hepA')
     print listb
+    print lista
     print liste
 
     # bucketlist.remove_disease('hepA')
@@ -401,17 +423,24 @@ if __name__ == '__main__':
     print(bucketlist.get_avg_fraction())
 
     bucketlist.remove_question_asked('body_pain')
+    bucketlist.remove_question_asked('clay_coloured_bowels')
+    bucketlist.remove_question_asked('yellow_eyes')
+    bucketlist.remove_question_asked('pain_behind_eyes')
+    bucketlist.remove_question_asked('body_pain_muscles')
+    bucketlist.remove_question_asked('rash')
     print "*****************"
     print(bucketlist.get_score_by_disease('hepA'))
     print(bucketlist.get_score_by_disease('dengue'))
     print(bucketlist.get_avg_fraction())
 
     print "*****************"
-    listc = bucketlist.get_top_critical_symptoms(3)
-    listd = bucketlist.get_popular_symptoms(3)
-    listf = bucketlist.get_buckets_top_symptom(3)
-    print listc
+    listc = bucketlist.get_top_critical_symptoms()
+    listd = bucketlist.get_popular_symptoms()
+    listf = bucketlist.get_buckets_top_symptom()
     print listd
+    print listc
     print listf
+    print bucketlist.disease_fraction_done
+
     # print bucketlist.symptom_critical_count
     # print bucketlist.symptom_score

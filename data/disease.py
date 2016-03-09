@@ -7,7 +7,16 @@ author: Jaideep Kekre
 Symptom Legend:
 '''
 fever = 'fever'
+
 body_pain = 'body_pain'
+body_pain_chest = 'body_pain_chest'
+body_pain_head = 'body_pain_head'
+body_pain_stomach = 'body_pain_stomach'
+body_pain_muscles = 'body_pain_muscles'
+
+
+
+
 joint_pain = 'joint_pain'
 pain_behind_eyes = 'pain_behind_eyes'
 rash='rash'
@@ -29,6 +38,7 @@ dengue = {
                 joint_pain		    : IMPORTANT,
                 pain_behind_eyes	: OPTIONAL,
                 rash				: OPTIONAL,
+    body_pain_muscles: OPTIONAL,
                 'name'				: "dengue"
 
          }
