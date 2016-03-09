@@ -7,6 +7,7 @@
 
 from expert_system import expert_system
 from helper import bcolors
+from telegram_interface import create_keyboard
 
 
 class core(object):
@@ -42,7 +43,7 @@ class core(object):
 
         response_list.append(expert_advice['text'])
         response_dict['response_list'] = response_list
-        response_dict['keyboard'] = expert_advice['keyboard']
+        response_dict['keyboard'] = create_keyboard(expert_advice['keyboard'])
         return response_dict
 
     def language_magic(self, arg_list_of_tokens):

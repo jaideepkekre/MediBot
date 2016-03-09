@@ -118,6 +118,7 @@ class DoctorSkyNet(object):
         print "using algo-3-"
         if question == None:
             print "None in algo three"
+            self.done = 1
             return None
         return question[0]
 
@@ -170,11 +171,11 @@ class DoctorSkyNet(object):
 if __name__ == '__main__':
     obj = DoctorSkyNet()
     obj.askdoctor()
-    obj.askdoctor("No")
+    obj.askdoctor("Yes, High (> 103 F)")
 
     obj.askdoctor("No")
 
-    obj.askdoctor("No")
+    obj.askdoctor("Yes")
     obj.askdoctor("No")
     obj.askdoctor("No")
     obj.askdoctor("Yes")

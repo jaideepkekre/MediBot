@@ -42,7 +42,7 @@ class question_interface(object):
         self.all.update(top_tags)
 
     def return_question(self, symptom_name):
-        print symptom_name
+
         symptom_dict = self.all[symptom_name]
 
         q_obj = question_interface()
