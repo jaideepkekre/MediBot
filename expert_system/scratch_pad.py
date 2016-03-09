@@ -56,18 +56,10 @@ class scratch_pad():
                         inner_tag = t
                         break
 
-                if sub_tags_data_dict[inner_tag].has_key('linked_questions'):
-                    eventual_data = list()
-                    eventual_data.append(inner_tag)
-                    temp = sub_tags_data_dict[inner_tag]
-
-                    while temp.has_key('linked_questions'):
-                        temp = temp['linked_questions']
-                        eventual_data.append(temp['tag'])
-                else:
-                    eventual_data = inner_tag
+                eventual_data = inner_tag
 
                 self.data[top_tag].append(eventual_data)
+        return self.data
 
     """
     Send a list of tags and sub tags to check status.

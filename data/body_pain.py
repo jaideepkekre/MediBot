@@ -17,7 +17,7 @@ def data():
             'question': "Does your chest hurt?",
             'response': ['Yes', 'No'],
             'response_type': 'ruledchar',
-            'serial': 0,
+            'serial': 1,
 
         },
 
@@ -25,7 +25,7 @@ def data():
             'question': "Does your stomach area hurt?",
             'response': ['Yes', 'No'],
             'response_type': 'ruledchar',
-            'serial': 0,
+            'serial': 2,
 
         },
 
@@ -33,7 +33,7 @@ def data():
             'question': "Do your muscles hurt?",
             'response': ['Yes', 'No'],
             'response_type': 'ruledchar',
-            'serial': 0,
+            'serial': 3,
 
         }
 

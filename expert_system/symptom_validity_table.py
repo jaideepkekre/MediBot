@@ -37,6 +37,9 @@ class symptom_validity_table(object):
         for symptom in self.score.keys():
             self.score[symptom]=0
 
+    def get_dict(self):
+        return self.data
+
     def set(self, tag, value=True):
         if self.data.has_key(tag):
             self.data[tag] = value

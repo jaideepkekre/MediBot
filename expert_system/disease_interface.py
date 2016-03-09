@@ -80,6 +80,8 @@ class Buckets:
 
     def get_popular_symptoms(self, number_of_symptoms=1):
         top_symptoms = heapq.nlargest(number_of_symptoms, self.symptom_score, key=self.symptom_score.get)
+        if len(top_symptoms) == 0:
+            return None
         return top_symptoms
 
     """
@@ -91,6 +93,8 @@ class Buckets:
     def get_top_critical_symptoms(self, number_of_symptoms=1):
         top_symptoms = heapq.nlargest(number_of_symptoms, self.symptom_critical_count,
                                       key=self.symptom_critical_count.get)
+        if len(top_symptoms) == 0:
+            return None
         return top_symptoms
 
     """
@@ -105,6 +109,8 @@ class Buckets:
         # print self.top_value_bucket_symptoms
         list_symptom = top_symptoms = heapq.nlargest(number_of_symptoms, self.top_value_bucket_symptoms,
                                                      key=self.top_value_bucket_symptoms.get)
+        if len(top_symptoms) == 0:
+            return None
         return list_symptom
 
 
@@ -135,11 +141,30 @@ class Buckets:
     re-calculates score for all disease buckets
     """
 
-    def remove_question_asked(self, symptom):
+    def answered_question_True(self, symptom, response='Yes'):
+        if response == 'Yes':
+            print "Response is now True"
+            response = True
+
+        if symptom in self.removed_questions_list:
+            return None
 
         for table_disease_object in self.bucket.values():
-            table_disease_object.set_score(symptom, 0)
-            table_disease_object.set(symptom, False)
+            symptom_state = table_disease_object.get(symptom)
+            # print symptom_state
+            if response == symptom_state:
+                table_disease_object.set_score(symptom, 0)
+                table_disease_object.set(symptom, False)
+                # print "MATCH:" + str(symptom)
+
+            else:
+                table_disease_object.set(symptom, False)
+                # print "Mismatch:" + str(symptom)
+
+
+                # print "-------------------------"
+                # print table_disease_object.get_score('fever')
+                # print"------------------------------------"
         if symptom in self.symptom_score.keys():
             self.symptom_score.pop(symptom)
         if symptom in self.top_value_bucket_symptoms.keys():
@@ -191,13 +216,11 @@ class Buckets:
     def calculate_highest_symptom(self):
         for disease_name in self.bucket:
             symptom = self.get_highest_symptom(disease_name)
-            #print symptom + "is highest"
             if symptom == None:
                 pass
             else:
 
                 score = self.bucket[disease_name].get_score(symptom)
-                # print score
                 self.update_top_value(symptom, score)
 
     '''
@@ -251,8 +274,7 @@ class Buckets:
             for symptom in specific_disease_dict.keys():
                 if symptom == 'name':
                     pass
-                elif symptom in self.removed_questions_list:
-                    pass
+
                 else:
                     temp=table_disease_object.get_score(symptom)
                     score=score+temp
@@ -334,6 +356,7 @@ class Buckets:
         table_disease_object.set_score(symptom, score)
         if symptom in self.symptom_signature_needed:
             table_disease_object.set(symptom, self.disease_signature_object.get_fever(disease_name))
+            #print table_disease_object.get_dict()
         else:
             table_disease_object.set(symptom, arg)
 
@@ -360,7 +383,8 @@ class Buckets:
 
                 else:
                     self.set_table(symptom, specific_disease_dict[symptom], new_table_obj, specific_disease_name)
-            self.bucket[specific_disease_name]=new_table_obj
+            self.bucket[specific_disease_name] = new_table_obj
+            #print new_table_obj.get_dict()
             self.calculate_current_score(specific_disease_dict['name'])
 
             
@@ -381,7 +405,7 @@ if __name__ == '__main__':
 
     print(bucketlist.get_score_by_disease('hepA'))
     print(bucketlist.get_score_by_disease('dengue'))
-    print "*******************************"
+    #print "*******************************"
     # bucketlist.question_asked('fever')
     print(bucketlist.get_score_by_disease('hepA'))
     print(bucketlist.get_score_by_disease('dengue'))
@@ -404,30 +428,31 @@ if __name__ == '__main__':
     print liste
 
     # bucketlist.remove_disease('hepA')
-    bucketlist.remove_question_asked('fever')
+    print "********************"
+    bucketlist.answered_question_True('fever','No')
     print "*****************"
     print(bucketlist.get_score_by_disease('hepA'))
     print(bucketlist.get_score_by_disease('dengue'))
     print(bucketlist.get_avg_fraction())
 
-    bucketlist.remove_question_asked('fatigue')
+    bucketlist.answered_question_True('fatigue')
     print "*****************"
     print(bucketlist.get_score_by_disease('hepA'))
     print(bucketlist.get_score_by_disease('dengue'))
     print(bucketlist.get_avg_fraction())
 
-    bucketlist.remove_question_asked('joint_pain')
+    bucketlist.answered_question_True('joint_pain','Yes')
     print "*****************"
     print(bucketlist.get_score_by_disease('hepA'))
     print(bucketlist.get_score_by_disease('dengue'))
     print(bucketlist.get_avg_fraction())
 
-    bucketlist.remove_question_asked('body_pain')
-    bucketlist.remove_question_asked('clay_coloured_bowels')
-    bucketlist.remove_question_asked('yellow_eyes')
-    bucketlist.remove_question_asked('pain_behind_eyes')
-    bucketlist.remove_question_asked('body_pain_muscles')
-    bucketlist.remove_question_asked('rash')
+    bucketlist.answered_question_True('body_pain')
+    bucketlist.answered_question_True('clay_coloured_bowels')
+    bucketlist.answered_question_True('yellow_eyes')
+    bucketlist.answered_question_True('pain_behind_eyes')
+    bucketlist.answered_question_True('body_pain_muscles')
+    bucketlist.answered_question_True('rash')
     print "*****************"
     print(bucketlist.get_score_by_disease('hepA'))
     print(bucketlist.get_score_by_disease('dengue'))
@@ -441,6 +466,8 @@ if __name__ == '__main__':
     print listc
     print listf
     print bucketlist.disease_fraction_done
+    print bucketlist.get_score_by_disease('hepA')
+    print bucketlist.get_score_by_disease('dengue')
 
     # print bucketlist.symptom_critical_count
     # print bucketlist.symptom_score

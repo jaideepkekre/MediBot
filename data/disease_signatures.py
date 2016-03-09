@@ -17,6 +17,7 @@ class Disease_Signature(object):
         self.hepA = 'hepA'
         self.dengue = 'dengue'
         self.fever_states = ['Yes, High (> 103 F)', 'Yes, Mild (101-103 F)', 'Yes, Very Mild (99 - 101 F)', 'No']
+        # print self.fever_states[0]
 
         self.fever = {
             self.dengue: self.fever_states[0],
@@ -26,3 +27,8 @@ class Disease_Signature(object):
 
     def get_fever(self, disease_name):
         return self.fever[disease_name]
+
+
+if __name__ == "__main__":
+    obj = Disease_Signature()
+    print obj.get_fever('hepA')
