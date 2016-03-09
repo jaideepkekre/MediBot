@@ -138,14 +138,17 @@ class DoctorSkyNet(object):
         self.update_fractions()
         self.stage_0 = 1
         self.stage_1 = 1
-        if self.stage_1 == 1 and self.stage_0 == 1 and self.done == 0:
+        if self.done == 1:
+            print "DONE"
+        elif self.stage_1 == 1 and self.stage_0 == 1 and self.done == 0:
             if self.last_asked_question == None and self.response == None:
                 q_obj = self.next_question()
             else:
                 self.send_last_question_details()
                 q_obj = self.next_question()
-        if self.done == 1:
-            print "DONE"
+            if q_obj == None:
+                print "All Questions done!"
+
 
 
 if __name__ == '__main__':
