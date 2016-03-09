@@ -1,11 +1,9 @@
 # @author Jaideep 
 #
 # Purpose: The job of the ES is to take the relevant data from the NLP module
-# and generate  
-from random import randint
+# and generate
 
-from db_store import db
-from question_interface import question_interface
+from DoctorSkyNet import DoctorSkyNet
 from telegram_interface import create_keyboard
 
 
@@ -15,40 +13,12 @@ class expert_system:
     """
 
     def __init__(self):
-        self.db_object = db()
-        self.top_questions = list()
-        self.top_questions_asked = list()
-        self.question = question_interface()
-        self.last_question_asked_tag = None
-        self.question_flag = 0
-        self.call_db()
-        self.hunger = 10
+        self.response = None
+        self.status = 0
+        self.AI = DoctorSkyNet()
         pass
 
-    def call_db(self):
-        self.top_questions = self.db_object.poplulate_questions_top()
-        self.top_questions_asked = [0] * len(self.top_questions)
-        pass
 
-    def return_question(self, symptom):
-        if 0 not in self.top_questions_asked:
-            self.hunger = -1
-
-            return -1
-
-        index = len(self.top_questions)
-        random_index = randint(0, index - 1)
-
-        while self.top_questions_asked[random_index] == 1:
-            random_index = randint(0, index - 1)
-
-        self.top_questions_asked[random_index] = 1
-        # print self.top_questions
-        # print self.top_questions_asked
-        # print random_index
-        question = self.top_questions[random_index]
-
-        return question
 
     def ask(self):
         question_object = self.return_question(0)
@@ -76,9 +46,11 @@ class expert_system:
         response = dict()
         key = '9960'
         if key in arg_list_of_tokens:
-            response = self.ask()
-            return response
-
+            self.status = 1
+        if self.status == 1:
+            self.status = 2
+            self.AI.askdoctor()
+            pass
         if self.hunger != -1 and self.question_flag == 1:
             response = self.ask()
             return response

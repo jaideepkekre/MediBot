@@ -19,7 +19,7 @@ class core(object):
 
         self.expert = expert_system()
 
-    def response(self, arg_list_of_tokens):
+    def response(self, user_response):
         # passes contents of argList to console / dispatcher
         # exitPoint
         # expert_object = expert_system.expert_system()
@@ -27,7 +27,7 @@ class core(object):
         response_dict = dict()
         response_dict['chat_id'] = self.id
 
-        expert_advice = self.expert.run_expert(arg_list_of_tokens)
+        expert_advice = self.expert.run_expert(user_response)
         response_list = list()
 
         response_list.append(expert_advice['text'])
@@ -43,19 +43,13 @@ class core(object):
 
         return response_dict
 
-    def tokenize_response(self, arg_string):
-        # tokenizes a string and returns a list of tokens(optional)
-        list_of_tokens = list()
-        list_of_tokens = arg_string.split(" ")
-        # add list of tokens to response dict
-        response_dict = self.language_magic(list_of_tokens)
-        return response_dict
+
 
     def read_struct(self, arg_dict):
         # parse Dict and extract relevant info
         # calls tokenizeResponse()
         # print argDict
-        response_dict = self.tokenize_response(str(arg_dict['text']))
+        response_dict = self.language_magic(str(arg_dict['text']))
         return response_dict
 
     def get_struct(self, arg_dict):

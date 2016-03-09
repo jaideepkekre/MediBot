@@ -43,16 +43,18 @@ class DoctorSkyNet(object):
 
     def check_if_top_asked(self, question):
         # first check if the question is a top question
-
+        if question == None:
+            print "none in invalid"
+            return None
         if question in self.question_structure_dict.keys():
             # print "this is top question , no worry"
-            return None
+            return question
         else:
             for top_question in self.question_structure_dict.keys():
                 list = self.question_structure_dict[top_question]
                 if question in list:
                     if top_question in self.questions_asked:
-                        return None
+                        return question
                     else:
                         return top_question
 
@@ -66,6 +68,9 @@ class DoctorSkyNet(object):
     def next_question(self):
         self.update_fractions()
         print self.fraction
+        if self.bucket_object.done == 1:
+            self.done == 1
+            return None
         if (self.fraction < self.change_point_one):
             self.ask_this = self.algorithm_one()
             if self.ask_this == None:
@@ -79,9 +84,12 @@ class DoctorSkyNet(object):
             self.ask_this = self.algorithm_three()
             if self.ask_this == None:
                 self.done = 1
+                # print "None caught in 33"
+
         if self.done == 0:
             q = self.check_if_top_asked(self.ask_this)
             if q == None:
+                # print "None captured in 3"
                 return self.create_question(self.ask_this)
             else:
                 return self.create_question(q)
@@ -127,9 +135,12 @@ class DoctorSkyNet(object):
             return None
         if question in self.question_structure_dict.keys():
             lista = self.question_structure_dict[question]
+
             if len(lista) > 0:
-                for question in lista:
-                    print question + " invalidated" + " for response " + self.response
+                for questions in lista:
+                    if questions == None:
+                        pass
+                    #print question + " invalidated" + " for response " + self.response
                     self.bucket_object.answered_question_True(question, False)
 
     def askdoctor(self, response=None):
@@ -140,6 +151,7 @@ class DoctorSkyNet(object):
         self.stage_1 = 1
         if self.done == 1:
             print "DONE"
+            return None
         elif self.stage_1 == 1 and self.stage_0 == 1 and self.done == 0:
             if self.last_asked_question == None and self.response == None:
                 q_obj = self.next_question()
@@ -147,6 +159,7 @@ class DoctorSkyNet(object):
                 self.send_last_question_details()
                 q_obj = self.next_question()
             if q_obj == None:
+                self.done =1
                 print "All Questions done!"
 
 
@@ -154,12 +167,12 @@ class DoctorSkyNet(object):
 if __name__ == '__main__':
     obj = DoctorSkyNet()
     obj.askdoctor()
-    obj.askdoctor("Yes, High (> 103 F)")
+    obj.askdoctor("No")
 
-    obj.askdoctor("Yes")
+    obj.askdoctor("No")
 
-    obj.askdoctor("Yes")
-    obj.askdoctor("Yes")
+    obj.askdoctor("No")
+    obj.askdoctor("No")
     obj.askdoctor("No")
     obj.askdoctor("Yes")
     obj.askdoctor("Yes")

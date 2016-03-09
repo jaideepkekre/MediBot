@@ -40,6 +40,7 @@ class Buckets:
 
         self.disease_score = dict()
         self.disease_fraction_done = dict()
+        self.done = 0
 
 
 
@@ -64,11 +65,15 @@ class Buckets:
     def get_avg_fraction(self):
         for disease_name in self.bucket.keys():
             self.calculate_fraction(disease_name)
-            number = 0
-            fraction = float(0)
+        number = 0
+        fraction = float(0)
         for fractions in self.disease_fraction_done.values():
             number = number + 1
             fraction = fraction + fractions
+        if number == 0:
+            self.done = 1
+            return None
+
         return fraction / float(number)
 
 
@@ -126,6 +131,8 @@ class Buckets:
     """
 
     def answered_question_True(self, symptom, response='Yes'):
+        if self.done == 1:
+            print "No More Stuff"
         if response == 'Yes':
             # print "Response is now True"
             response = True
@@ -147,10 +154,14 @@ class Buckets:
                 if table_disease_object.get_score(symptom) == CRITICAL:
                     self.remove_disease(table_disease_name)
                     print table_disease_name + " removed"
+                    if len(self.bucket) == 0:
+                        self.done = 1
                 if table_disease_object.get_score(symptom) == IMPORTANT:
                     if table_disease_name in self.disease_about_to_removed:
                         self.remove_disease(table_disease_name)
                         print table_disease_name + " removed"
+                        if len(self.bucket) == 0:
+                            self.done = 1
                 else:
                     self.disease_about_to_removed.append(table_disease_name)
 
@@ -195,6 +206,7 @@ class Buckets:
                             self.remove_symptom_score(symptom, disease_dict)
                     self.bucket.pop(disease_dict['name'])
                     self.disease_score.pop(disease_dict['name'])
+                    self.disease_fraction_done.pop(disease_dict['name'])
 
         pass
 
@@ -441,7 +453,9 @@ if __name__ == '__main__':
     print listb
     print lista
     print liste
-
+    print(bucketlist.get_avg_fraction())
+    print "---------------------------------------"
+    print bucketlist.disease_fraction_done
     # bucketlist.remove_disease('hepA')
     print "********************"
     bucketlist.answered_question_True('fever','No')
