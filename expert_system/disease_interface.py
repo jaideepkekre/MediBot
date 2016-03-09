@@ -45,6 +45,8 @@ class Buckets:
 
         self.removed_questions_list = list()
         self.finished_diseases_list = list()
+        self.disease_about_to_removed = list()
+
         # stores the symptom that is not True / False
         self.symptom_signature_needed = ['fever']
 
@@ -114,25 +116,7 @@ class Buckets:
         return list_symptom
 
 
-    '''
-    remove_disease()
-    removes disease and it's score from all dicts
-    '''
-    def remove_disease(self, name):
-        if name in self.bucket.keys():
-            diseases_dict = self.diseases_object.get_disease()
-            for specific_disease_name in diseases_dict.keys():
-                if name == specific_disease_name:
-                    disease_dict = diseases_dict[specific_disease_name]
-                    for symptom in disease_dict.keys():
-                        if symptom in self.removed_questions_list:
-                            pass
-                        else:
-                            self.remove_symptom_score(symptom, disease_dict)
-                    self.bucket.pop(disease_dict['name'])
-                    self.disease_score.pop(disease_dict['name'])
 
-        pass
 
     """
     question_asked()
@@ -143,13 +127,14 @@ class Buckets:
 
     def answered_question_True(self, symptom, response='Yes'):
         if response == 'Yes':
-            print "Response is now True"
+            # print "Response is now True"
             response = True
 
         if symptom in self.removed_questions_list:
             return None
 
-        for table_disease_object in self.bucket.values():
+        for table_disease_name in self.bucket.keys():
+            table_disease_object = self.bucket[table_disease_name]
             symptom_state = table_disease_object.get(symptom)
             # print symptom_state
             if response == symptom_state:
@@ -159,6 +144,10 @@ class Buckets:
 
             else:
                 table_disease_object.set(symptom, False)
+                if table_disease_object.get_score(symptom) == CRITICAL:
+                    self.remove_disease(table_disease_name)
+                    print table_disease_name + " removed"
+
                 # print "Mismatch:" + str(symptom)
 
 
@@ -182,6 +171,26 @@ class Buckets:
     """
     <---------------------------------------INTERNAL METHODS-------------------------------->
     """
+    '''
+    remove_disease()
+    removes disease and it's score from all dicts
+    '''
+
+    def remove_disease(self, name):
+        if name in self.bucket.keys():
+            diseases_dict = self.diseases_object.get_disease()
+            for specific_disease_name in diseases_dict.keys():
+                if name == specific_disease_name:
+                    disease_dict = diseases_dict[specific_disease_name]
+                    for symptom in disease_dict.keys():
+                        if symptom in self.removed_questions_list:
+                            pass
+                        else:
+                            self.remove_symptom_score(symptom, disease_dict)
+                    self.bucket.pop(disease_dict['name'])
+                    self.disease_score.pop(disease_dict['name'])
+
+        pass
 
     def get_score_by_symptom(self, symptom):
         if symptom in self.removed_questions_list:
@@ -200,7 +209,7 @@ class Buckets:
             self.calculate_current_score(disease_name)
             return self.disease_score[disease_name]
         else:
-            return None
+            return "INVALID DISEASE"
         pass
 
 
