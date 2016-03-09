@@ -161,6 +161,9 @@ class DoctorSkyNet(object):
             if q_obj == None:
                 self.done =1
                 print "All Questions done!"
+                return None
+            else:
+                return q_obj
 
 
 

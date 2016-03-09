@@ -26,14 +26,23 @@ class core(object):
         # expert_object(response_dict)
         response_dict = dict()
         response_dict['chat_id'] = self.id
+        print "User Response is" + " " + user_response
 
-        expert_advice = self.expert.run_expert(user_response)
+        if self.expert.done == 1:
+            expert_advice = None
+        else:
+            expert_advice = self.expert.run_expert(user_response)
+
         response_list = list()
+        if expert_advice == None:
+            response_list.append(user_response)
+            response_dict['response_list'] = response_list
+            response_dict['keyboard'] = []
+            return response_dict
 
         response_list.append(expert_advice['text'])
         response_dict['response_list'] = response_list
         response_dict['keyboard'] = expert_advice['keyboard']
-
         return response_dict
 
     def language_magic(self, arg_list_of_tokens):
@@ -68,7 +77,14 @@ class core(object):
 def tester():
     print("This is a class , don't run this directly")
     sampleOBJ = core(1234567)
-    sampleDict = {'chat_id': 1234567, 'text': 'yo yo yo GTFO!'}
+
+    sampleDict = {'chat_id': 1234567, 'text': 'start'}
+    sampleOBJ.run_core(sampleDict)
+
+    sampleDict = {'chat_id': 1234567, 'text': 'No'}
+    sampleOBJ.run_core(sampleDict)
+
+    sampleDict = {'chat_id': 1234567, 'text': 'No'}
     sampleOBJ.run_core(sampleDict)
 
 

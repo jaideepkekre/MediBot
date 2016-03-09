@@ -4,7 +4,7 @@
 # and generate
 
 from DoctorSkyNet import DoctorSkyNet
-from telegram_interface import create_keyboard
+from question_interface import question_interface
 
 
 class expert_system:
@@ -16,53 +16,43 @@ class expert_system:
         self.response = None
         self.status = 0
         self.AI = DoctorSkyNet()
+        self.done = 0
         pass
 
+    def run_expert(self, user_response):
+        q_obj = question_interface()
+        key = 'start'
+        print user_response
 
-
-    def ask(self):
-        question_object = self.return_question(0)
-        response = dict()
-
-        if question_object == -1:
-            response['text'] = "Done"
-            response['keyboard'] = None
-            return response
-
-            # print type (question_object)
-        text = question_object.question
-        responses = question_object.response
-        keyboard = create_keyboard(responses)
-
-        response['text'] = text
-        response['keyboard'] = keyboard
-
-        self.last_question_asked_tag = question_object.tag
-        self.question_flag = 1
-
-        return response
-
-    def run_expert(self, arg_list_of_tokens):
-        response = dict()
-        key = '9960'
-        if key in arg_list_of_tokens:
+        if key == user_response:
             self.status = 1
+
         if self.status == 1:
             self.status = 2
-            self.AI.askdoctor()
-            pass
-        if self.hunger != -1 and self.question_flag == 1:
-            response = self.ask()
-            return response
+            q_obj = self.AI.askdoctor()
+            returns = dict()
+            returns['text'] = q_obj.question
+            returns['keyboard'] = q_obj.response
+            return returns
 
-        text = ""
+        if self.status == 2:
+            q_obj = self.AI.askdoctor(user_response)
+            if q_obj == None:
+                self.status = 3
+                returns = dict()
+                returns['text'] = 'Your Test is Complete'
+                returns['keyboard'] = ""
+                self.done = 1
 
-        for token in arg_list_of_tokens:
-            text = text + token
+                return returns
 
-        response['text'] = text
-        response['keyboard'] = None
-        return response
+            returns = dict()
+            returns['text'] = q_obj.question
+            returns['keyboard'] = q_obj.response
+            print "options are:" + str(q_obj.response)
+            return returns
+
+
 
 
 def tester():
