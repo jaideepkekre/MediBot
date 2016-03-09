@@ -91,7 +91,7 @@ class DoctorSkyNet(object):
 
     def algorithm_one(self):
         question = self.bucket_object.get_popular_symptoms()
-        print "-1-"
+        print "using algo-1-"
         if question == None:
             print "None in algo one:"
             return None
@@ -99,7 +99,7 @@ class DoctorSkyNet(object):
 
     def algorithm_two(self):
         question = self.bucket_object.get_top_critical_symptoms()
-        print "-2-"
+        print "Using algo-2-"
         if question == None:
             print "None in algo two"
             return None
@@ -107,7 +107,7 @@ class DoctorSkyNet(object):
 
     def algorithm_three(self):
         question = self.bucket_object.get_buckets_top_symptom()
-        print "-3-"
+        print "using algo-3-"
         if question == None:
             print "None in algo three"
             return None
