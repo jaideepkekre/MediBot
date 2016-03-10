@@ -5,19 +5,38 @@
 
 def data():
     return {
-        'body_pain_area' : {
-            'question' : "Where are you experiencing pain the most?",
-            'response' : ['Head', 'Chest', 'Stomach', 'Hands', 'Legs'],
+        'body_pain_head': {
+            'question': "Does your Head hurt?",
+            'response': ['Yes', 'No'],
             'response_type' : 'ruledchar',
-            'loop' : True,
             'serial' : 0,
-            'linked_questions' : {
-                'question' : "Are you still having body pain elsewhere?",
-                'response' : ['Yes', 'No'],
-                'response_type' : 'ruledchar',
-                'tag' : 'body_pain_area_more_pain'
-            }
+
+        },
+
+        'body_pain_chest': {
+            'question': "Does your chest hurt?",
+            'response': ['Yes', 'No'],
+            'response_type': 'ruledchar',
+            'serial': 1,
+
+        },
+
+        'body_pain_stomach': {
+            'question': "Does your stomach area hurt?",
+            'response': ['Yes', 'No'],
+            'response_type': 'ruledchar',
+            'serial': 2,
+
+        },
+
+        'body_pain_muscles': {
+            'question': "Do your muscles hurt?",
+            'response': ['Yes', 'No'],
+            'response_type': 'ruledchar',
+            'serial': 3,
+
         }
+
     }
 
 

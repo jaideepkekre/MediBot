@@ -7,6 +7,7 @@
 
 from expert_system import expert_system
 from helper import bcolors
+from telegram_interface import create_keyboard
 
 
 class core(object):
@@ -19,21 +20,30 @@ class core(object):
 
         self.expert = expert_system()
 
-    def response(self, arg_list_of_tokens):
+    def response(self, user_response):
         # passes contents of argList to console / dispatcher
         # exitPoint
         # expert_object = expert_system.expert_system()
         # expert_object(response_dict)
         response_dict = dict()
         response_dict['chat_id'] = self.id
+        print "User Response is" + " " + user_response
 
-        expert_advice = self.expert.run_expert(arg_list_of_tokens)
+        if self.expert.done == 1:
+            expert_advice = None
+        else:
+            expert_advice = self.expert.run_expert(user_response)
+
         response_list = list()
+        if expert_advice == None:
+            response_list.append(user_response)
+            response_dict['response_list'] = response_list
+            response_dict['keyboard'] = []
+            return response_dict
 
         response_list.append(expert_advice['text'])
         response_dict['response_list'] = response_list
-        response_dict['keyboard'] = expert_advice['keyboard']
-
+        response_dict['keyboard'] = create_keyboard(expert_advice['keyboard'])
         return response_dict
 
     def language_magic(self, arg_list_of_tokens):
@@ -43,19 +53,13 @@ class core(object):
 
         return response_dict
 
-    def tokenize_response(self, arg_string):
-        # tokenizes a string and returns a list of tokens(optional)
-        list_of_tokens = list()
-        list_of_tokens = arg_string.split(" ")
-        # add list of tokens to response dict
-        response_dict = self.language_magic(list_of_tokens)
-        return response_dict
+
 
     def read_struct(self, arg_dict):
         # parse Dict and extract relevant info
         # calls tokenizeResponse()
         # print argDict
-        response_dict = self.tokenize_response(str(arg_dict['text']))
+        response_dict = self.language_magic(str(arg_dict['text']))
         return response_dict
 
     def get_struct(self, arg_dict):
@@ -74,7 +78,14 @@ class core(object):
 def tester():
     print("This is a class , don't run this directly")
     sampleOBJ = core(1234567)
-    sampleDict = {'chat_id': 1234567, 'text': 'yo yo yo GTFO!'}
+
+    sampleDict = {'chat_id': 1234567, 'text': 'start'}
+    sampleOBJ.run_core(sampleDict)
+
+    sampleDict = {'chat_id': 1234567, 'text': 'No'}
+    sampleOBJ.run_core(sampleDict)
+
+    sampleDict = {'chat_id': 1234567, 'text': 'No'}
     sampleOBJ.run_core(sampleDict)
 
 

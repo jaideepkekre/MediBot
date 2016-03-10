@@ -13,6 +13,7 @@ class question_interface(object):
 
     def __init__(self):
         super(question_interface, self).__init__()
+        self.all = dict()
         self.tag = None
         self.question = None
         self.response_re = ['reg_exp_1', 'reg_exp_2', None, None]
@@ -26,6 +27,29 @@ class question_interface(object):
         self.linked_questions = None
         self.loop = False
         self.serial = None
+        self.populate_questions()
+
+    def populate_questions(self):
+        top_tags = __import__('top_questions').data().keys()
+
+        for top_tag in top_tags:
+            sub_tags_data_dict = __import__(top_tag).data()
+            if len(sub_tags_data_dict) == 0:
+                pass
+            else:
+                self.all.update(sub_tags_data_dict)
+        top_tags = __import__('top_questions').data()
+        self.all.update(top_tags)
+
+    def return_question(self, symptom_name):
+
+        symptom_dict = self.all[symptom_name]
+
+        q_obj = question_interface()
+        q_obj.question = symptom_dict['question']
+        q_obj.response = symptom_dict['response']
+
+        return q_obj
 
     def verify_response(self, check_via_re, check_via_response, response_to_verify):
         flag = [0, 0, 0, 0]
@@ -72,13 +96,17 @@ class question_interface(object):
 
 def test():
     q = question_interface()
+    q.return_question('fever')
+
     q.question = "Do you have a fever ?"
     q.response = ['yes', 'no']
     q.response_type = 'ruledchar'
 
+
     q.verify_response(0, 1, 'yesyesyes')
     q.verify_response(0, 1, 'yesyesnoyes')
     q.verify_response(0, 1, 'poyesop')
+    # q.populate_questions()
     pass
 
 
