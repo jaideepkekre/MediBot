@@ -27,17 +27,16 @@ class DoctorSkyNet(object):
         self.ask_this = None
 
         self.scratch_pad_object = scratch_pad()
-        self.question_structure_dict = self.scratch_pad_object._build_data()
+        self.question_structure_dict = getattr(self.scratch_pad_object, 'data')
 
         self.bucket_object = Buckets()
         self.questions_asked = self.bucket_object.removed_questions_list
         self.fraction = 0
 
     '''
-    checks if the top question for the current question is asked , if asked then the question can be asked else
-    the top question is asked instead
+    checks if the top question for the current question is asked , if asked then
+    the question can be asked else the top question is asked instead
     '''
-
     def update_fractions(self):
         self.fraction = self.bucket_object.get_avg_fraction()
 
@@ -61,7 +60,8 @@ class DoctorSkyNet(object):
     def send_last_question_details(self):
         # print "sending:" + self.last_asked_question
         # print "sending"  + self.response
-        self.bucket_object.answered_question_True(self.last_asked_question, self.response)
+        self.bucket_object.answered_question_True(self.last_asked_question,
+            self.response)
         if self.response == 'No' or self.response == 'False':
             self.invalidate_question(self.last_asked_question)
 
@@ -75,6 +75,11 @@ class DoctorSkyNet(object):
             self.ask_this = self.algorithm_one()
             if self.ask_this == None:
                 self.ask_this = self.algorithm_two()
+
+                if self.ask_this == None:
+                    self.ask_this = self.algorithm_three()
+                    if self.ask_this == None:
+                        self.done = 1
 
         elif self.fraction < self.change_point_two:
             self.ask_this = self.algorithm_two()
@@ -97,6 +102,9 @@ class DoctorSkyNet(object):
             print "Done"
             return None
 
+    """
+    ask the question which will the most buckets.
+    """
     def algorithm_one(self):
         question = self.bucket_object.get_popular_symptoms()
         print "using algo-1-"
@@ -105,6 +113,9 @@ class DoctorSkyNet(object):
             return None
         return question[0]
 
+    """
+    ask critical questions so that buckets can be elimnated fast.
+    """
     def algorithm_two(self):
         question = self.bucket_object.get_top_critical_symptoms()
         print "Using algo-2-"
@@ -113,6 +124,9 @@ class DoctorSkyNet(object):
             return None
         return question[0]
 
+    """
+    ask the question which will fill up the remaining buckets the fastest.
+    """
     def algorithm_three(self):
         question = self.bucket_object.get_buckets_top_symptom()
         print "using algo-3-"
@@ -148,8 +162,12 @@ class DoctorSkyNet(object):
         if response != None:
             self.response = response
         self.update_fractions()
-        self.stage_0 = 1
+        self.stage_0 = 1 # basic data collection happens here. load value from redis done.
         self.stage_1 = 1
+        if self.stage_0 != 1:
+            pass
+            # TODO: while list not empty, ask questions. When list empty, set
+            # self.stage_0 = 1.
         if self.done == 1:
             print "DONE"
             return None

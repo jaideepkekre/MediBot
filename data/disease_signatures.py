@@ -2,7 +2,8 @@
 """
 Owner : Jaideep Kekre
 
-This module stores the  Other symptom state on a per disease level, rest are automatically set to True
+This module stores the  Other symptom state on a per disease level, rest are 
+automatically set to True
 
 Works for : FEVER
 """

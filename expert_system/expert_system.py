@@ -27,7 +27,7 @@ class expert_system:
         if key == user_response:
             self.status = 1
 
-        if self.status == 1:
+        if self.status == 1: # stage 1 last response from user stays None
             self.status = 2
             q_obj = self.AI.askdoctor()
             returns = dict()
@@ -35,7 +35,7 @@ class expert_system:
             returns['keyboard'] = q_obj.response
             return returns
 
-        if self.status == 2:
+        if self.status == 2: # in stage 2 last response from user is passed to AI 
             q_obj = self.AI.askdoctor(user_response)
             if q_obj == None:
                 self.status = 3
