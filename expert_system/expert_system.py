@@ -21,7 +21,7 @@ class expert_system:
 
     def run_expert(self, user_response):
         q_obj = question_interface()
-        key = 'start'
+        key = 'Start'
         print user_response
 
         if key == user_response:
