@@ -31,12 +31,14 @@ class dispatcher():
         message = messageDict['text']
         chat_id = messageDict['chat_id']
         Check = self.verify_remove_user(chat_id, message)
+        # if check is true , the user object was removed on user "Done"
         if Check == True:
             response_dict = dict()
             response_dict['chat_id'] = chat_id
             response_dict['response_list'] = ["Hi Welcome to MediBot"]
             response_dict['keyboard'] = create_keyboard(['Begin consultation with Doctor SkyNet'])
             return response_dict
+
         for user in self.object_list:
 
             if (user == messageDict['chat_id']):
