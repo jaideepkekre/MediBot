@@ -102,22 +102,6 @@ class question_interface_helper():
 
         return linked_questions_list
 
-    @classmethod
-    def load_basic_data_questions(self):
-        from basic_data import data
-        from question_interface import question_interface
-
-        question_list = []
-        data = data()
-
-        for attr, value in data.iteritems():
-            q = question_interface()
-            question_list.append(self._assign_attributes(q, value, attr))
-
-        question_list.sort(key=lambda x: x.serial)
-
-        return question_list
-
 def test():
     tq_list = question_interface_helper.load_top_questions()
     f = None
