@@ -43,7 +43,7 @@ class expert_system:
                 self.status = 3
                 returns = dict()
                 returns['text'] = 'Your Test is Complete'
-                returns['keyboard'] = ""
+                returns['keyboard'] = []
                 self.done = 1
 
                 return returns
