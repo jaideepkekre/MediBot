@@ -10,7 +10,7 @@
 import core
 from helper import bcolors
 from telegram_interface import create_keyboard
-
+from db_store import db
 
 # @author Sameer Deshmukh / Jaideep Kekre 
 class dispatcher():
@@ -20,10 +20,11 @@ class dispatcher():
     """
 
     def __init__(self):
-        self.object_list = dict()
         # dict to store active objects and map them to users
-
-        pass
+        self.object_list = dict() 
+        # redis db connection object for the conversation. Pass this to whatever
+        # class needs a connection to the db.
+        self.db_connection = db().connection
 
     def dispatch_to_core(self, arg_dict):
         messageDict = arg_dict
@@ -48,7 +49,7 @@ class dispatcher():
                 return response_dict
 
         print bcolors.FAIL + "User with chat id" + str(chat_id) + " not found , creating new object "
-        coreobj = core.core(chat_id)
+        coreobj = core.core(chat_id, self.db_connection)
         self.object_list[chat_id] = coreobj
         # stores created object in class variable for future use.
         response_dict = coreobj.run_core(messageDict)

@@ -9,4 +9,5 @@ export PYTHONPATH=":$DIR/bin:$PYTHONPATH:"
 export PYTHONPATH=":$DIR/expert_system:$PYTHONPATH"
 export PYTHONPATH=":$DIR/lib:$PYTHONPATH"
 export PYTHONPATH=":$DIR/data:$PYTHONPATH"
+redis-server &
 python $DIR/bin/server.py

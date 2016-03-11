@@ -7,15 +7,8 @@ from disease_interface import Buckets
 from question_interface import question_interface
 from scratch_pad import scratch_pad
 
-
 class DoctorSkyNet(object):
-    def __init__(self):
-        self.stage_0 = 0 # basic data acquisition stage
-        self.stage_1 = 0
-        self.stage_2 = 0
-        self.stage_3 = 0
-        self.done = 0
-
+    def __init__(self, chat_id, db_connection):
         self.change_point_one = 0.3
         self.change_point_two = 0.6
 
@@ -29,10 +22,34 @@ class DoctorSkyNet(object):
         self.scratch_pad_object = scratch_pad()
         self.question_structure_dict = getattr(self.scratch_pad_object, 'data')
         self.basic_data_questions_table = self._create_basic_data_table()
+        self.last_asked_basic_question = None
 
         self.bucket_object = Buckets()
         self.questions_asked = self.bucket_object.removed_questions_list
         self.fraction = 0
+        self.db_connection = db_connection
+        self.chat_id = chat_id
+
+        self.stage_0 = self._verify_basic_questions_asked_and_set_answered()
+        self.stage_1 = 0
+        self.stage_2 = 0
+        self.stage_3 = 0
+        self.done = 0
+
+    """
+    If all basic questions have been answered for this chat id, then this will
+    set stage_0 to 1, meaning that basic questions have been answered.
+    """
+    def _verify_basic_questions_asked_and_set_answered(self):
+        return_value = 1
+        for attr in self.basic_data_questions_table:
+            value = self.db_connection.hget(self.chat_id, attr) 
+            if not value:
+                return_value = 0
+            else:
+                self.basic_data_questions_table[attr] = value
+
+        return return_value
 
     """
     create a dict (table) to see the basic data collection
@@ -175,7 +192,7 @@ class DoctorSkyNet(object):
         for tag in self.basic_data_questions_table:
              if not self.basic_data_questions_table[tag]:
                 next_question = tag
-                self.basic_data_questions_table[tag] = True
+                self.last_asked_basic_question = tag
                 break
 
         if next_question == None:
@@ -195,13 +212,17 @@ class DoctorSkyNet(object):
         self.update_fractions()
         self.stage_1 = 1 # state just for future proofing. No use right now.
         if self.stage_0 != 1: # basic question asking logic
-            # TODO: add code for saving user responses and dump them to db
-            # once they're done.
+            if self.last_asked_basic_question:
+                self.basic_data_questions_table[self.last_asked_basic_question] = self.response
+
             q_obj = self.next_basic_data_question()
             if q_obj == None:
-                print "Basic data collected"
                 self.stage_0 = 1
                 self.response = None
+
+                # this should be the only place where all the basic data is set
+                for attr, value in self.basic_data_questions_table.iteritems():
+                    self.db_connection.hset(self.chat_id, attr, value)
             else:
                 return q_obj
 

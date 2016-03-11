@@ -12,10 +12,10 @@ class expert_system:
     The awesome expert system that we gonna create.
     """
 
-    def __init__(self):
+    def __init__(self, chat_id, db_connection):
         self.response = None
         self.status = 0
-        self.AI = DoctorSkyNet()
+        self.AI = DoctorSkyNet(chat_id, db_connection)
         self.done = 0
         pass
 

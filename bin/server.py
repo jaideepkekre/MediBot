@@ -58,7 +58,6 @@ def accept_message(bot, update):
         'text': update.message.text,
         'bot': bot
     }
-    print update.message
     MESSAGE_QUEUE.put(d)
 
 def start_handler(bot, update):

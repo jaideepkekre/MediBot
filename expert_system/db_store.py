@@ -7,14 +7,21 @@ from question_interface import question_interface
 from helper import bcolors
 from expert_system_helper import question_interface_helper
 from scratch_pad import scratch_pad
-
+import redis
 
 class db(object):
 
     def __init__(self):
         self.connection = None
         self.scratch_pad = None
+        self.connect_redis()
 
+    def connect_redis(self):
+        self.connection = redis.Redis(
+             host='localhost',
+             port=6379, 
+             password='')
+    
     """
     Set the scratch pad to a scratch_pad() object.
     """
