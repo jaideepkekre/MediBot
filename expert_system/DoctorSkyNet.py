@@ -10,7 +10,7 @@ from scratch_pad import scratch_pad
 
 class DoctorSkyNet(object):
     def __init__(self):
-        self.stage_0 = 0
+        self.stage_0 = 0 # basic data acquisition stage
         self.stage_1 = 0
         self.stage_2 = 0
         self.stage_3 = 0
@@ -28,10 +28,22 @@ class DoctorSkyNet(object):
 
         self.scratch_pad_object = scratch_pad()
         self.question_structure_dict = getattr(self.scratch_pad_object, 'data')
+        self.basic_data_questions_table = self._create_basic_data_table()
 
         self.bucket_object = Buckets()
         self.questions_asked = self.bucket_object.removed_questions_list
         self.fraction = 0
+
+    """
+    create a dict (table) to see the basic data collection
+    """
+    def _create_basic_data_table(self):
+        data_dict = {}
+
+        for tag in __import__('basic_data').data().keys():
+            data_dict[tag] = False
+
+        return data_dict
 
     '''
     checks if the top question for the current question is asked , if asked then
@@ -158,16 +170,41 @@ class DoctorSkyNet(object):
                     #print question + " invalidated" + " for response " + self.response
                     self.bucket_object.answered_question_True(question, False)
 
+    def next_basic_data_question(self):
+        next_question = None
+        for tag in self.basic_data_questions_table:
+             if not self.basic_data_questions_table[tag]:
+                next_question = tag
+                self.basic_data_questions_table[tag] = True
+                break
+
+        if next_question == None:
+            return None
+
+        question_dict = __import__('basic_data').data()[next_question]
+        q_obj = question_interface()
+        q_obj.question = question_dict['question']
+        q_obj.response = question_dict['response']
+        q_obj.response_type = question_dict['response_type']
+
+        return q_obj
+
     def askdoctor(self, response=None):
         if response != None:
             self.response = response
         self.update_fractions()
-        self.stage_0 = 1 # basic data collection happens here. load value from redis done.
-        self.stage_1 = 1
-        if self.stage_0 != 1:
-            pass
-            # TODO: while list not empty, ask questions. When list empty, set
-            # self.stage_0 = 1.
+        self.stage_1 = 1 # state just for future proofing. No use right now.
+        if self.stage_0 != 1: # basic question asking logic
+            # TODO: add code for saving user responses and dump them to db
+            # once they're done.
+            q_obj = self.next_basic_data_question()
+            if q_obj == None:
+                print "Basic data collected"
+                self.stage_0 = 1
+                self.response = None
+            else:
+                return q_obj
+
         if self.done == 1:
             print "DONE"
             return None
@@ -178,7 +215,7 @@ class DoctorSkyNet(object):
                 self.send_last_question_details()
                 q_obj = self.next_question()
             if q_obj == None:
-                self.done =1
+                self.done = 1
                 print "All Questions done!"
                 return None
             else:
@@ -189,6 +226,7 @@ class DoctorSkyNet(object):
 if __name__ == '__main__':
     obj = DoctorSkyNet()
     obj.askdoctor()
+
     obj.askdoctor("Yes, High (> 103 F)")
 
     obj.askdoctor("No")
