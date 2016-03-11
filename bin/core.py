@@ -13,15 +13,14 @@ from telegram_interface import create_keyboard
 class core(object):
     """one stop shop for all your NLP needs"""
 
-    def __init__(self, arg_user_id):
+    def __init__(self, arg_user_id, db_connection):
         super(core, self).__init__()
         self.id = arg_user_id
         print bcolors.HEADER + "USER OBJECT CREATED WITH CHAT ID: " + str(self.id) + "\n"
 
-        self.expert = expert_system()
+        self.expert = expert_system(self.id, db_connection)
+
         #self.dispatcher_obj= dispatcher()
-
-
 
 
     def response(self, user_response):
