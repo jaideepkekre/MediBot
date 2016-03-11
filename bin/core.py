@@ -4,7 +4,7 @@
 # FUNCTIONS: getStruct() , readStruct() , tokenizeResponse() , languageMagic()
 # Owner : Jaideep Kekre
 # Issues: "Sameer put your issues here"# from expert_system import expert_system
-
+# from dispatcher import dispatcher
 from expert_system import expert_system
 from helper import bcolors
 from telegram_interface import create_keyboard
@@ -19,6 +19,10 @@ class core(object):
         print bcolors.HEADER + "USER OBJECT CREATED WITH CHAT ID: " + str(self.id) + "\n"
 
         self.expert = expert_system()
+        #self.dispatcher_obj= dispatcher()
+
+
+
 
     def response(self, user_response):
         # passes contents of argList to console / dispatcher
@@ -38,12 +42,14 @@ class core(object):
         if expert_advice == None:
             response_list.append(user_response)
             response_dict['response_list'] = response_list
-            response_dict['keyboard'] = []
+            response_dict['keyboard'] = create_keyboard(['Begin consultation with Doctor SkyNet'])
             return response_dict
 
         response_list.append(expert_advice['text'])
         response_dict['response_list'] = response_list
-        response_dict['keyboard'] = create_keyboard(expert_advice['keyboard'])
+        keyboard_data = expert_advice['keyboard']
+        keyboard_data.append('Done')
+        response_dict['keyboard'] = create_keyboard(keyboard_data)
         return response_dict
 
     def language_magic(self, arg_list_of_tokens):
