@@ -60,10 +60,6 @@ def accept_message(bot, update):
     }
     MESSAGE_QUEUE.put(d)
 
-def start_handler(bot, update):
-    text = "Start the conversation by replying with 'Start'"
-    bot.sendMessage(update.message.chat_id, text=text)
-
 def help_handler(bot, update):
     text = "Begin by sending 'Start' to the bot and simply answer questions as\
 the come."
@@ -74,7 +70,6 @@ def settings_handler(bot, update):
 
 updater = Updater(token=TOKEN)
 message_sender = updater.dispatcher
-message_sender.addTelegramCommandHandler("start", start_handler)
 message_sender.addTelegramCommandHandler("help", help_handler)
 message_sender.addTelegramCommandHandler("settings", settings_handler)
 message_sender.addTelegramMessageHandler(accept_message)
