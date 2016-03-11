@@ -24,7 +24,9 @@ class expert_system:
         key = 'Start'
         print user_response
 
-        if key == user_response:
+        valid_keys = ['Start', 'Begin consultation with Doctor SkyNet']
+
+        if user_response in valid_keys:
             self.status = 1
 
         if self.status == 1:

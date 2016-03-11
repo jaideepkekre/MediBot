@@ -27,6 +27,15 @@ class dispatcher():
     def dispatch_to_core(self, arg_dict):
         messageDict = arg_dict
         # dispatching logic goes here
+        message = messageDict['text']
+        chat_id = messageDict['chat_id']
+        Check = self.verify_remove_user(chat_id, message)
+        if Check == True:
+            response_dict = dict()
+            response_dict['chat_id'] = chat_id
+            response_dict['response_list'] = ["Hi Welcome to MediBot"]
+            response_dict['keyboard'] = []
+            return response_dict
         for user in self.object_list:
 
             if (user == messageDict['chat_id']):
@@ -35,9 +44,9 @@ class dispatcher():
                 response_dict = core_obj.run_core(messageDict)
                 return response_dict
 
-        print bcolors.FAIL + "User with chat id" + str(messageDict['chat_id']) + " not found , creating new object "
-        coreobj = core.core(messageDict['chat_id'])
-        self.object_list[messageDict['chat_id']] = coreobj
+        print bcolors.FAIL + "User with chat id" + str(chat_id) + " not found , creating new object "
+        coreobj = core.core(chat_id)
+        self.object_list[chat_id] = coreobj
         # stores created object in class variable for future use.
         response_dict = coreobj.run_core(messageDict)
         return response_dict
@@ -53,6 +62,19 @@ class dispatcher():
         print bcolors.OKBLUE + "response is :" + str(response_dict['response_list']) + "\n"
         # print self.object_list
         return response_dict
+
+    '''
+    if user input is Done , remove user object
+    '''
+
+    def verify_remove_user(self, chatid, message):
+        if message in ['done', 'Done', 'Exit', 'exit']:
+            if chatid in self.object_list.keys():
+                self.object_list.pop(chatid)
+                print bcolors.FAIL + "Chat ID : " + str(chatid) + " removed"
+                return True
+        else:
+            return False
 
 
 def tester():
