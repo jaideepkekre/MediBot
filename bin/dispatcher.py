@@ -9,6 +9,7 @@
 
 import core
 from helper import bcolors
+from telegram_interface import create_keyboard
 
 
 # @author Sameer Deshmukh / Jaideep Kekre 
@@ -34,7 +35,7 @@ class dispatcher():
             response_dict = dict()
             response_dict['chat_id'] = chat_id
             response_dict['response_list'] = ["Hi Welcome to MediBot"]
-            response_dict['keyboard'] = []
+            response_dict['keyboard'] = create_keyboard(['Begin consultation with Doctor SkyNet'])
             return response_dict
         for user in self.object_list:
 
