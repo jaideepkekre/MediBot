@@ -15,7 +15,7 @@ class db(object):
         self.connection = None
         self.scratch_pad = None
 
-    
+    """
     Set the scratch pad to a scratch_pad() object.
     """
     def set_scratch_pad(self, s):
