@@ -43,7 +43,7 @@ class DoctorSkyNet(object):
     def _verify_basic_questions_asked_and_set_answered(self):
         return_value = 1
         for attr in self.basic_data_questions_table:
-            value = self.db_connection.hget(self.chat_id, attr) 
+            value = self.db_connection.get_basic_data_for_chat_id(self.chat_id, attr)
             if not value:
                 return_value = 0
             else:
@@ -222,7 +222,7 @@ class DoctorSkyNet(object):
 
                 # this should be the only place where all the basic data is set
                 for attr, value in self.basic_data_questions_table.iteritems():
-                    self.db_connection.hset(self.chat_id, attr, value)
+                    self.db_connection.set_basic_data_for_chat_id(self.chat_id, attr, value)
             else:
                 return q_obj
 

@@ -24,7 +24,7 @@ class dispatcher():
         self.object_list = dict() 
         # redis db connection object for the conversation. Pass this to whatever
         # class needs a connection to the db.
-        self.db_connection = db().connection
+        self.db_connection = db()
 
     def dispatch_to_core(self, arg_dict):
         messageDict = arg_dict
@@ -58,6 +58,10 @@ class dispatcher():
     def run_dispatcher(self, arg_dict):
         # called by server()
         # scaffolding code
+        # make the initial entry in DB that a username with corresponding chat id
+        #   has arrived.
+        self.db_connection.set_username_chat_id_entry(
+            arg_dict['username'], arg_dict['chat_id'])
         response_dict = self.dispatch_to_core(arg_dict)
         # returned to server()
         # response dict has field 'chat_id' 'response_list'

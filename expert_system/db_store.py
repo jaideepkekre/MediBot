@@ -19,7 +19,7 @@ class db(object):
         self.init_data_if_not_present()
 
     def connect_redis(self):
-        self.connection = redis.Redis(
+        self.connection = redis.StrictRedis(
              host='localhost',
              port=6379, 
              password='')
@@ -35,59 +35,72 @@ class db(object):
         if len(self.connection.hgetall('GLOBAL_USERNAME_CHATID')) == 0:
             self.connection.hmset('GLOBAL_USERNAME_CHATID', {"" : ""})
     
+    """
+    increase the count of a symptom in global symptom count by 1.
+    """
     def increment_global_symptom(self, symptom):
         self.connection.hincrby('GLOBAL_SYMPTOM_COUNT', symptom, 1)
 
+    """
+    get the counts of all or specific symptom.
+    """
     def get_global_symptom_count(self, symptom):
-        return self.connection.hget('GLOBAL_SYMPTOM_COUNT', symptom)
+        if symptom == 'all':
+            return self.connection.hgetall('GLOBAL_SYMPTOM_COUNT')
+        else:
+            return self.connection.hget('GLOBAL_SYMPTOM_COUNT', symptom)
 
-    def get_global_symptom_dict(self):
-        return self.connection.hgetall('GLOBAL_SYMPTOM_COUNT')
-
+    """
+    set basic data for a particular chat id.
+    """
     def set_basic_data_for_chat_id(self, chat_id, key, value):
-        pass
+        self.connection.hset(str(chat_id) + ":basic_data", key, value)
 
     """
-    Set the scratch pad to a scratch_pad() object.
+    get all or specific basic data for a particular chat id.
     """
-    def set_scratch_pad(self, s):
-        if str(s.__class__) != 'scratch_pad.scratch_pad':
-            raise(TypeError("You must pass a scratch_pad object."))
-
-        self.scratch_pad = s
-
-
-    """
-    Get a list of question_interface() elements that contain the questions within
-    the top level tags that have not yet been answered yet.
-
-    The tag_list should contain only top level tags. All the unanswered questions
-    under those tags will be returned in a list.
-    """
-    def get_next_unanswered_question(self, tag):
-        pending_question_tags = self.scratch_pad.query(tag)
-        if len(pending_question_tags) == 0:
-            return None
-
-        last_unanswered_tag = pending_question_tags[0]
-        self.scratch_pad.pop(tag)
-        return question_interface_helper.load_linked_questions(
-            tag, last_unanswered_tag)[0]
-
+    def get_basic_data_for_chat_id(self, chat_id, basic_data):
+        user = str(chat_id) + ":basic_data"
+        if basic_data == 'all':
+            return self.connection.hgetall(user)
+        else:
+            return self.connection.hget(user, basic_data)
 
     """
-    Get a specific question from the database given the hierarchy if it has 
-    NOT BEEN ANSWERED already.
+    set a particular symptom for a given chat id.
 
-    Return None otherwise.
+    If the user has not yet reported the symptom, it is automatically created
+    and set to '1' the first time this method is called with a given chat ID.
+
+    Else, the symptom count will be incremented by 1 for that given chat ID.
     """
-    def get_specific_question(self, tag_hierarchy):
-        if self.scratch_pad.query(tag_hierarchy[1]) == None:
-            self.scratch_pad.pop_specific(tag_hierarchy)
-            return question_interface_helper.load_linked_questions(
-                tag_hierarchy[0], tag_hierarchy[1])[0]
+    def set_symptom_data_for_chat_id(self, chat_id, key, value):
+        user = str(chat_id) + ":symptoms"
+        count = self.connection.hget(user, key)
 
-        return None
+        if not count:
+            self.connection.hset(user, key, 1)
+        else:
+            self.connection.hincrby(user, key)
+
+    """
+    get a single or all symptom data for specific chat id.
+    """
+    def get_symptom_data_for_chat_id(self, chat_id, symptom):
+        user = str(chat_id) + ":symptoms"
+        if symptom == 'all':
+            return self.connection.hgetall(user)
+        else:
+            return self.connection.hget(user, symptom)
+
+    """
+    set the username-chat_id pair in the GLOBAL_USERNAME_CHATID hash.
+
+    Should be called only once per chat id.
+    """
+    def set_username_chat_id_entry(self,username, chat_id):
+        self.connection.hset('GLOBAL_USERNAME_CHATID', username, chat_id)
+
 
 def test():
     from scratch_pad import scratch_pad
@@ -97,23 +110,7 @@ def test():
     d.increment_global_symptom('fever')
 
     print d.connection.hget('GLOBAL_SYMPTOM_COUNT', 'fever')
-    print d.get_global_symptom_dict()
-
-    d.set_scratch_pad(s)
-
-    if getattr(d, 'scratch_pad') == s:
-        print "PASS1"
-
-    l = d.get_next_unanswered_question('fever')
-    if l.question == "Please measure your fever with a thermometer and tell us your temperature.":
-        print "PASS2"
-
-    if l.serial == 0:
-        print "PASS3"
-
-    q = d.get_specific_question(['body_pain', 'body_pain_area'])
-
-    print q
+    print d.get_global_symptom_count('all')
 
     # run integration tests in test.py for full testing.
 
