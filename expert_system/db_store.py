@@ -7,6 +7,7 @@ from question_interface import question_interface
 from helper import bcolors
 from expert_system_helper import question_interface_helper
 from scratch_pad import scratch_pad
+from symptom_validity_table import symptom_validity_table
 import redis
 
 class db(object):
@@ -15,13 +16,37 @@ class db(object):
         self.connection = None
         self.scratch_pad = None
         self.connect_redis()
+        self.init_data_if_not_present()
 
     def connect_redis(self):
         self.connection = redis.Redis(
              host='localhost',
              port=6379, 
              password='')
+
+    def init_data_if_not_present(self):
+        data = symptom_validity_table().get_dict()
+        for key in data:
+            data[key] = 0
+
+        if len(self.connection.hgetall('GLOBAL_SYMPTOM_COUNT')) == 0:
+            self.connection.hmset('GLOBAL_SYMPTOM_COUNT', data)
+
+        if len(self.connection.hgetall('GLOBAL_USERNAME_CHATID')) == 0:
+            self.connection.hmset('GLOBAL_USERNAME_CHATID', {"" : ""})
     
+    def increment_global_symptom(self, symptom):
+        self.connection.hincrby('GLOBAL_SYMPTOM_COUNT', symptom, 1)
+
+    def get_global_symptom_count(self, symptom):
+        return self.connection.hget('GLOBAL_SYMPTOM_COUNT', symptom)
+
+    def get_global_symptom_dict(self):
+        return self.connection.hgetall('GLOBAL_SYMPTOM_COUNT')
+
+    def set_basic_data_for_chat_id(self, chat_id, key, value):
+        pass
+
     """
     Set the scratch pad to a scratch_pad() object.
     """
@@ -69,6 +94,10 @@ def test():
 
     s = scratch_pad()
     d = db()
+    d.increment_global_symptom('fever')
+
+    print d.connection.hget('GLOBAL_SYMPTOM_COUNT', 'fever')
+    print d.get_global_symptom_dict()
 
     d.set_scratch_pad(s)
 
