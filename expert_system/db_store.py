@@ -67,6 +67,7 @@ class db(object):
             return self.connection.hget(user, basic_data)
 
     """
+    #jaideep
     set a particular symptom for a given chat id.
 
     If the user has not yet reported the symptom, it is automatically created
@@ -74,24 +75,27 @@ class db(object):
 
     Else, the symptom count will be incremented by 1 for that given chat ID.
     """
-    def set_symptom_data_for_chat_id(self, chat_id, key, value):
+    def set_symptom_data_for_chat_id(self, chat_id, symptom):
         user = str(chat_id) + ":symptoms"
-        count = self.connection.hget(user, key)
+        count = self.connection.hget(user, symptom)
 
         if not count:
-            self.connection.hset(user, key, 1)
+            self.connection.hset(user, symptom, 1)
         else:
-            self.connection.hincrby(user, key)
+            self.connection.hincrby(user, symptom)
 
     """
+    #jaideep
     get a single or all symptom data for specific chat id.
+
+    returns a number if symptom is given, or a dict of all symptoms if nothing.
     """
-    def get_symptom_data_for_chat_id(self, chat_id, symptom):
+    def get_symptom_data_for_chat_id(self, chat_id, symptom='all'):
         user = str(chat_id) + ":symptoms"
         if symptom == 'all':
             return self.connection.hgetall(user)
         else:
-            return self.connection.hget(user, symptom)
+            return int(self.connection.hget(user, symptom))
 
     """
     set the username-chat_id pair in the GLOBAL_USERNAME_CHATID hash.
