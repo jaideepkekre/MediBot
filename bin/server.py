@@ -56,7 +56,7 @@ def accept_message(bot, update):
     d = {
         'chat_id': update.message.chat_id,
         'text': update.message.text,
-        'username' : update.message.username,
+        'username' : update.message.from_user.username,
         'bot': bot
     }
     MESSAGE_QUEUE.put(d)
