@@ -84,6 +84,8 @@ class db(object):
         else:
             self.connection.hincrby(user, symptom)
 
+        self.increment_global_symptom(symptom)
+
     """
     #jaideep
     get a single or all symptom data for specific chat id.
