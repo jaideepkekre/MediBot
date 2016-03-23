@@ -54,6 +54,17 @@ class core(object):
     def language_magic(self, arg_list_of_tokens):
         # gets a list of tokens as arg and does magic on them
         # calls response()
+        yes_list = ['ho', 'haan', 'haanji', 'HO', 'Ho', u'\U0001f44d', ]
+        no_list = ['nahi', 'Nahi', 'Na', 'na', 'Nope', 'nope', u"\U0001F44E"]
+        if arg_list_of_tokens in yes_list:
+            arg_list_of_tokens = 'Yes'
+            print bcolors.WARNING + "Yes Translation Used"
+            print bcolors.OKBLUE
+        elif arg_list_of_tokens in no_list:
+            arg_list_of_tokens = 'No'
+            print bcolors.WARNING + "No Translation Used"
+            print bcolors.OKBLUE
+
         response_dict = self.response(arg_list_of_tokens)
 
         return response_dict
@@ -64,7 +75,7 @@ class core(object):
         # parse Dict and extract relevant info
         # calls tokenizeResponse()
         # print argDict
-        response_dict = self.language_magic(str(arg_dict['text']))
+        response_dict = self.language_magic(arg_dict['text'])
         return response_dict
 
     def get_struct(self, arg_dict):

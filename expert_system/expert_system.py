@@ -22,7 +22,7 @@ class expert_system:
     def run_expert(self, user_response):
         q_obj = question_interface()
         key = 'Start'
-        print user_response
+        # print user_response
 
         valid_keys = ['Start', 'Begin consultation with Doctor SkyNet']
 

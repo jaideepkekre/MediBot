@@ -8,9 +8,10 @@
 
 
 import core
+from db_store import db
 from helper import bcolors
 from telegram_interface import create_keyboard
-from db_store import db
+
 
 # @author Sameer Deshmukh / Jaideep Kekre 
 class dispatcher():
@@ -66,8 +67,8 @@ class dispatcher():
         # returned to server()
         # response dict has field 'chat_id' 'response_list'
         # logging
-        print bcolors.OKGREEN + "\input is :" + str(arg_dict['text'])
-        print bcolors.OKBLUE + "response is :" + str(response_dict['response_list']) + "\n"
+        print bcolors.OKGREEN + "input is :" + (arg_dict['text'])
+        print bcolors.OKBLUE + "response is :" + (response_dict['response_list'][0]) + "\n"
         # print self.object_list
         return response_dict
 
