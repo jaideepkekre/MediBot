@@ -23,6 +23,7 @@ class DoctorSkyNet(object):
         self.question_structure_dict = getattr(self.scratch_pad_object, 'data')
         self.basic_data_questions_table = self._create_basic_data_table()
         self.last_asked_basic_question = None
+        self.email_table = list()
 
         self.bucket_object = Buckets()
         self.questions_asked = self.bucket_object.removed_questions_list
@@ -89,6 +90,8 @@ class DoctorSkyNet(object):
     def send_last_question_details(self):
         # print "sending:" + self.last_asked_question
         # print "sending"  + self.response
+        self.email_table.append([self.last_asked_question, self.response])
+
         self.bucket_object.answered_question_True(self.last_asked_question,
             self.response)
         if self.response == 'No' or self.response == 'False':
@@ -174,6 +177,9 @@ class DoctorSkyNet(object):
         self.last_asked_question = question
         return q_obj
 
+    """
+    invalidates the linked question if top question is false
+    """
     def invalidate_question(self, question):
         if question == None:
             return None
