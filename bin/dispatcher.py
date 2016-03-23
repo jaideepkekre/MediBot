@@ -81,6 +81,7 @@ class dispatcher():
             if chatid in self.object_list.keys():
                 self.object_list.pop(chatid)
                 print bcolors.FAIL + "Chat ID : " + str(chatid) + " removed"
+                # send mail here
                 return True
         else:
             return False

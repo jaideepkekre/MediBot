@@ -12,8 +12,8 @@ import heapq
 
 from disease import Disease
 from disease_signatures import Disease_Signature
+from helper import bcolors
 from symptom_validity_table import symptom_validity_table
-
 
 CRITICAL = 20
 IMPORTANT= 10
@@ -153,13 +153,14 @@ class Buckets:
                 table_disease_object.set(symptom, False)
                 if table_disease_object.get_score(symptom) == CRITICAL:
                     self.remove_disease(table_disease_name)
-                    print table_disease_name + " removed"
+                    print bcolors.FAIL + table_disease_name + " removed"
                     if len(self.bucket) == 0:
                         self.done = 1
                 if table_disease_object.get_score(symptom) == IMPORTANT:
                     if table_disease_name in self.disease_about_to_removed:
                         self.remove_disease(table_disease_name)
-                        print table_disease_name + " removed"
+                        print bcolors.FAIL + table_disease_name + " removed"
+                        print bcolors.OKBLUE
                         if len(self.bucket) == 0:
                             self.done = 1
                 else:

@@ -51,7 +51,7 @@ class expert_system:
             returns = dict()
             returns['text'] = q_obj.question
             returns['keyboard'] = q_obj.response
-            print "options are:" + str(q_obj.response)
+            # print "options are:" + str(q_obj.response)
             return returns
 
 

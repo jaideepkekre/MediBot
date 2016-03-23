@@ -4,8 +4,10 @@ Owner = Jaideep Kekre
 This module askes the questions
 """
 from disease_interface import Buckets
+from helper import bcolors
 from question_interface import question_interface
 from scratch_pad import scratch_pad
+
 
 class DoctorSkyNet(object):
     def __init__(self, chat_id, db_connection):
@@ -99,7 +101,8 @@ class DoctorSkyNet(object):
 
     def next_question(self):
         self.update_fractions()
-        print self.fraction
+        print bcolors.FAIL + str(self.fraction)
+        print bcolors.OKBLUE
         if self.bucket_object.done == 1:
             self.done == 1
             return None
@@ -121,6 +124,7 @@ class DoctorSkyNet(object):
             self.ask_this = self.algorithm_three()
             if self.ask_this == None:
                 self.done = 1
+                # SEND MAIL HERE
                 # print "None caught in 33"
 
         if self.done == 0:
@@ -139,7 +143,8 @@ class DoctorSkyNet(object):
     """
     def algorithm_one(self):
         question = self.bucket_object.get_popular_symptoms()
-        print "using algo-1-"
+        print bcolors.WARNING + "using algo-1-"
+        print bcolors.OKBLUE
         if question == None:
             print "None in algo one:"
             return None
@@ -150,7 +155,8 @@ class DoctorSkyNet(object):
     """
     def algorithm_two(self):
         question = self.bucket_object.get_top_critical_symptoms()
-        print "Using algo-2-"
+        print bcolors.WARNING + "Using algo-2-"
+        print bcolors.OKBLUE
         if question == None:
             print "None in algo two"
             return None
@@ -161,7 +167,8 @@ class DoctorSkyNet(object):
     """
     def algorithm_three(self):
         question = self.bucket_object.get_buckets_top_symptom()
-        print "using algo-3-"
+        print bcolors.WARNING + "using algo-3-"
+        print bcolors.OKBLUE
         if question == None:
             print "None in algo three"
             self.done = 1
@@ -171,8 +178,9 @@ class DoctorSkyNet(object):
     def create_question(self, question):
         q_obj = question_interface()
         q_obj = q_obj.return_question(question)
-        print q_obj.question
-        print q_obj.response
+        # print bcolors.HEADER+q_obj.question
+        # print q_obj.response
+        #print bcolors.OKBLUE
         # print question
         self.last_asked_question = question
         return q_obj

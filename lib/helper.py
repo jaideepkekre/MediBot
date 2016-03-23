@@ -2,7 +2,7 @@
 # Owner :Jaideep Kekre
 # _author_ = Jaideep Kekre / Sameer Deshmukh
 # _info_   = This file contains classes and functions for various helper routines.
-
+finalist = list()
 class bcolors:
     """Pretty colours for the terminal"""
 
