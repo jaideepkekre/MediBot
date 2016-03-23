@@ -5,6 +5,8 @@
 # Owner : Jaideep Kekre
 # Issues: "Sameer put your issues here"# from expert_system import expert_system
 # from dispatcher import dispatcher
+from Emoji import no
+from Emoji import yes
 from expert_system import expert_system
 from helper import bcolors
 from telegram_interface import create_keyboard
@@ -54,8 +56,9 @@ class core(object):
     def language_magic(self, arg_list_of_tokens):
         # gets a list of tokens as arg and does magic on them
         # calls response()
-        yes_list = ['ho', 'haan', 'haanji', 'HO', 'Ho', u'\U0001f44d', ]
-        no_list = ['nahi', 'Nahi', 'Na', 'na', 'Nope', 'nope', u"\U0001F44E"]
+        yes_list = ['ho', 'haan', 'haanji', 'HO', 'Ho', u'\U0001f44d', yes]
+        no_list = ['nahi', 'Nahi', 'Na', 'na', 'Nope', 'nope', u"\U0001F44E", no]
+
         if arg_list_of_tokens in yes_list:
             arg_list_of_tokens = 'Yes'
             print bcolors.WARNING + "Yes Translation Used"
