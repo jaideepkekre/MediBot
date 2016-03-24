@@ -1,3 +1,4 @@
+[![Code Issues](https://www.quantifiedcode.com/api/v1/project/05044d45aa3e46339e2e47cfa91c53e5/badge.svg)](https://www.quantifiedcode.com/app/project/05044d45aa3e46339e2e47cfa91c53e5)
 # MediBot
 An Chatbot based expert system to assist doctors improve screening of patients and diagnosis . 
 
