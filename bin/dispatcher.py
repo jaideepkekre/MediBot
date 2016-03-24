@@ -22,7 +22,7 @@ class dispatcher():
 
     def __init__(self):
         # dict to store active objects and map them to users
-        self.object_list = dict() 
+        self.object_list = dict()
         # redis db connection object for the conversation. Pass this to whatever
         # class needs a connection to the db.
         self.db_connection = db()

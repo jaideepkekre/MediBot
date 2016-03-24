@@ -30,7 +30,7 @@ def return_messages(return_queue):
 
         for text in m['response_list']:
             bot.sendMessage(
-                    chat_id=m['chat_id'], text=text, reply_markup=m['keyboard'])
+                chat_id=m['chat_id'], text=text, reply_markup=m['keyboard'])
 
     user_thread_dict = {}
     while True:
@@ -61,18 +61,21 @@ def accept_message(bot, update):
     d = {
         'chat_id': update.message.chat_id,
         'text': update.message.text,
-        'username' : update.message.from_user.username,
+        'username': update.message.from_user.username,
         'bot': bot
     }
     MESSAGE_QUEUE.put(d)
+
 
 def help_handler(bot, update):
     text = "Begin by sending 'Start' to the bot and simply answer questions as\
 the come."
     bot.sendMessage(update.message.chat_id, text=text)
 
+
 def settings_handler(bot, update):
     bot.sendMessage(update.message.chat_id, text="nothing for now.")
+
 
 updater = Updater(token=TOKEN)
 message_sender = updater.dispatcher
