@@ -85,17 +85,17 @@ class question_interface_helper():
         linked_questions_list = []
         data = __import__(symptom_tag).data()
 
-        if serial == None and linked_question_tag == None:
+        if serial is None and linked_question_tag is None:
             for tag, value in data.iteritems():
                 linked_questions_list.append(self._build_linked_list(value, tag))
 
             linked_questions_list.sort(key=lambda x: x.serial)
-        elif serial == None and linked_question_tag:  # search and load linked question by tag
+        elif serial is None and linked_question_tag:  # search and load linked question by tag
             for tag, value in data.iteritems():
                 if tag == linked_question_tag:
                     linked_questions_list.append(self._build_linked_list(value, tag))
 
-        elif linked_question_tag == None and serial:  # search by serial
+        elif linked_question_tag is None and serial:  # search by serial
             for tag, value in data.iteritems():
                 if value['serial'] == serial:
                     linked_questions_list.append(self._build_linked_list(value, tag))

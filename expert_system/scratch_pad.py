@@ -154,7 +154,7 @@ if __name__ == '__main__':
     if sp.query('fever') == ['fever_measure', 'fever_periodic']:
         print "PASS2"
 
-    if sp.query('fever', True) == None:
+    if sp.query('fever', True) is None:
         print "PASS3"
 
     sp.set_top_level('fever')
@@ -162,7 +162,7 @@ if __name__ == '__main__':
         print "PASS4"
 
     sp.pop('fever')
-    if sp.query('fever_measure') == True and sp.query('fever_periodic') == None \
+    if sp.query('fever_measure') == True and sp.query('fever_periodic') is None \
     and sp.query('fever') == ['fever_periodic']:
         print "PASS5"
 

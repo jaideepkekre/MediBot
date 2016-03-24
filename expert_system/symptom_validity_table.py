@@ -69,7 +69,7 @@ class symptom_validity_table(object):
         tags = list()
 
         for tag in d:
-            if not (self.data[tag] == None and d[tag] == None):
+            if not (self.data[tag] is None and d[tag] is None):
                 tags.append(tag)
 
         return tags

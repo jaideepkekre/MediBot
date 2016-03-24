@@ -41,7 +41,7 @@ class core(object):
 
         response_list = list()
 
-        if expert_advice == None:
+        if expert_advice is None:
             response_list.append('Hi ! Please click the button below to begin ! ')
             response_dict['response_list'] = response_list
             response_dict['keyboard'] = create_keyboard(['Begin consultation with Doctor SkyNet'])
