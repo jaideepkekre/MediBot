@@ -43,7 +43,7 @@ class expert_system:
 
         if self.status == 2: # in stage 2 last response from user is passed to AI 
             q_obj = self.AI.askdoctor(user_response)
-            if q_obj == None:
+            if q_obj is None:
                 self.status = 3
                 returns = dict()
                 returns['text'] = 'Your Test is Complete, Please tell the doctor your ID:' + str(self.chat_id)

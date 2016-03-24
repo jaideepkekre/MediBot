@@ -89,7 +89,7 @@ class DoctorSkyNet(object):
 
     def check_if_top_asked(self, question):
         # first check if the question is a top question
-        if question == None:
+        if question is None:
             print "none in invalid"
             return None
         if question in self.question_structure_dict.keys():
@@ -140,28 +140,28 @@ class DoctorSkyNet(object):
         '''
         if (self.fraction < self.change_point_one):
             self.ask_this = self.algorithm_one()
-            if self.ask_this == None:
+            if self.ask_this is None:
                 self.ask_this = self.algorithm_two()
 
-                if self.ask_this == None:
+                if self.ask_this is None:
                     self.ask_this = self.algorithm_three()
-                    if self.ask_this == None:
+                    if self.ask_this is None:
                         self.done = 1
 
         elif self.fraction < self.change_point_two:
             self.ask_this = self.algorithm_two()
-            if self.ask_this == None:
+            if self.ask_this is None:
                 self.ask_this = self.algorithm_three()
         else:
             self.ask_this = self.algorithm_three()
-            if self.ask_this == None:
+            if self.ask_this is None:
                 self.done = 1
                 # SEND MAIL HERE
                 # print "None caught in 33"
 
         if self.done == 0:
             q = self.check_if_top_asked(self.ask_this)
-            if q == None:
+            if q is None:
                 # print "None captured in 3"
                 return self.create_question(self.ask_this)
             else:
@@ -177,7 +177,7 @@ class DoctorSkyNet(object):
         question = self.bucket_object.get_popular_symptoms()
         print bcolors.WARNING + "using algo-1-"
         print bcolors.OKBLUE
-        if question == None:
+        if question is None:
             print "None in algo one:"
             return None
         return question
@@ -189,7 +189,7 @@ class DoctorSkyNet(object):
         question = self.bucket_object.get_top_critical_symptoms()
         print bcolors.WARNING + "Using algo-2-"
         print bcolors.OKBLUE
-        if question == None:
+        if question is None:
             print "None in algo two"
             return None
         return question
@@ -201,7 +201,7 @@ class DoctorSkyNet(object):
         question = self.bucket_object.get_buckets_top_symptom()
         print bcolors.WARNING + "using algo-3-"
         print bcolors.OKBLUE
-        if question == None:
+        if question is None:
             print "None in algo three"
             self.done = 1
             return None
@@ -282,14 +282,14 @@ class DoctorSkyNet(object):
     invalidates the linked question if top question is false
     """
     def invalidate_question(self, question):
-        if question == None:
+        if question is None:
             return None
         if question in self.question_structure_dict.keys():
             lista = self.question_structure_dict[question]
 
             if len(lista) > 0:
                 for questions in lista:
-                    if questions == None:
+                    if questions is None:
                         pass
                     #print question + " invalidated" + " for response " + self.response
                     self.bucket_object.answered_question_True(question, False, None, None)
@@ -302,7 +302,7 @@ class DoctorSkyNet(object):
                 self.last_asked_basic_question = tag
                 break
 
-        if next_question == None:
+        if next_question is None:
             return None
 
         question_dict = __import__('basic_data').data()[next_question]
@@ -314,7 +314,7 @@ class DoctorSkyNet(object):
         return q_obj
 
     def askdoctor(self, response=None):
-        if response != None:
+        if response is not None:
             self.response = response
         self.update_fractions()
         self.stage_1 = 1 # state just for future proofing. No use right now.
@@ -326,7 +326,7 @@ class DoctorSkyNet(object):
                 self.basic_data_questions_table[self.last_asked_basic_question] = self.response
 
             q_obj = self.next_basic_data_question()
-            if q_obj == None:
+            if q_obj is None:
                 self.stage_0 = 1
                 self.response = None
 
@@ -343,12 +343,12 @@ class DoctorSkyNet(object):
             print "DONE"
             return None
         elif self.stage_1 == 1 and self.stage_0 == 1 and self.done == 0:
-            if self.last_asked_question == None and self.response == None:
+            if self.last_asked_question is None and self.response is None:
                 q_obj = self.next_question()
             else:
                 self.send_last_question_details()
                 q_obj = self.next_question()
-            if q_obj == None:
+            if q_obj is None:
                 self.done = 1
                 print "All Questions done!"
                 self.sendMail()

@@ -274,7 +274,7 @@ class Buckets:
     def calculate_highest_symptom(self):
         for disease_name in self.bucket:
             symptom = self.get_highest_symptom(disease_name)
-            if symptom == None:
+            if symptom is None:
                 pass
             else:
 
@@ -364,7 +364,7 @@ class Buckets:
     '''
 
     def remove_symptom_score(self,symptom,disease_dict):
-        if disease_dict[symptom] == None : 
+        if disease_dict[symptom] is None : 
             print "symptom already asked , hence ignore"
         elif symptom == 'name':
             pass
