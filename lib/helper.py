@@ -3,6 +3,17 @@
 # _author_ = Jaideep Kekre / Sameer Deshmukh
 # _info_   = This file contains classes and functions for various helper routines.
 finalist = list()
+
+
+def keywithmaxval(d):
+    """ a) create a list of the dict's keys and values;
+        b) return the key with the max value"""
+    v = list(d.values())
+    k = list(d.keys())
+    if len(v) == 0:
+        return None
+    return k[v.index(max(v))]
+
 class bcolors:
     """Pretty colours for the terminal"""
 

@@ -4,9 +4,11 @@ Owner = Jaideep Kekre
 This module askes the questions
 """
 from disease_interface import Buckets
-from helper import bcolors
+from helper import bcolors, keywithmaxval
 from question_interface import question_interface
 from scratch_pad import scratch_pad
+from tabled_mailer import mail_this
+
 
 
 class DoctorSkyNet(object):
@@ -37,7 +39,20 @@ class DoctorSkyNet(object):
         self.stage_1 = 0
         self.stage_2 = 0
         self.stage_3 = 0
+
+        self.is_minus_one_done = 0
+        self.is_zero_done = 0
         self.done = 0
+
+    """
+    sends mail using helper
+    """
+
+    def sendMail(self):
+        lists = self.bucket_object.get_bucket_fraction_list()
+        mail_this(self.email_table, self.chat_id, lists)
+
+        pass
 
     """
     If all basic questions have been answered for this chat id, then this will
@@ -95,7 +110,7 @@ class DoctorSkyNet(object):
         self.email_table.append([self.last_asked_question, self.response])
 
         self.bucket_object.answered_question_True(self.last_asked_question,
-            self.response)
+                                                  self.response, self.db_connection, self.chat_id)
         if self.response == 'No' or self.response == 'False':
             self.invalidate_question(self.last_asked_question)
 
@@ -106,6 +121,23 @@ class DoctorSkyNet(object):
         if self.bucket_object.done == 1:
             self.done == 1
             return None
+        """
+        algo -1 , 0 here
+        """
+        if self.is_minus_one_done == 0:
+            self.is_minus_one_done = 1
+            symptom = self.algorithm_minus_one()
+            if symptom is not None:
+                return self.create_question(symptom)
+        if self.is_zero_done == 0:
+            self.is_zero_done = 1
+            symptom = self.algorithm_zero()
+            if symptom is not None:
+                return self.create_question(symptom)
+
+        '''
+        algorithm 1,2,3 start from here
+        '''
         if (self.fraction < self.change_point_one):
             self.ask_this = self.algorithm_one()
             if self.ask_this == None:
@@ -148,10 +180,10 @@ class DoctorSkyNet(object):
         if question == None:
             print "None in algo one:"
             return None
-        return question[0]
+        return question
 
     """
-    ask critical questions so that buckets can be elimnated fast.
+    ask critical questions so that buckets can be eliminated fast.
     """
     def algorithm_two(self):
         question = self.bucket_object.get_top_critical_symptoms()
@@ -160,7 +192,7 @@ class DoctorSkyNet(object):
         if question == None:
             print "None in algo two"
             return None
-        return question[0]
+        return question
 
     """
     ask the question which will fill up the remaining buckets the fastest.
@@ -173,7 +205,67 @@ class DoctorSkyNet(object):
             print "None in algo three"
             self.done = 1
             return None
-        return question[0]
+        return question
+
+    """
+    returns the most common historical symptom for all patients
+    """
+
+    def algorithm_minus_one(self):
+        symptom_dict = self.db_connection.get_global_symptom_count()
+        done_list = self.bucket_object.get_asked_questions()
+        print "Global:"
+        print bcolors.FAIL + str(symptom_dict)
+        print bcolors.OKBLUE
+        for symptom in done_list:
+            symptom_dict.pop(symptom)
+
+        not_zero_flag = 0
+
+        for data in symptom_dict.values():
+            if data != '0':
+                not_zero_flag = 1
+                break
+        if not_zero_flag == 0:
+            print bcolors.FAIL + "No historical data found!"
+            print bcolors.OKBLUE
+            return None
+
+        else:
+            top_symptom = keywithmaxval(symptom_dict)
+            print bcolors.FAIL + "Global Historical Data found, using:" + top_symptom
+            print bcolors.OKBLUE
+            return top_symptom
+
+    """
+    returns the most common historical symptom for THIS patient
+    """
+
+    def algorithm_zero(self):
+        symptom_dict = self.db_connection.get_symptom_data_for_chat_id(self.chat_id)
+        done_list = self.bucket_object.get_asked_questions()
+        for symptom in done_list:
+            symptom_dict.pop(symptom)
+
+        print bcolors.FAIL + str(symptom_dict)
+        print bcolors.OKBLUE
+        not_zero_flag = 0
+        for data in symptom_dict.values():
+            if data != '0':
+                not_zero_flag = 1
+                break
+        if not_zero_flag == 0:
+            print bcolors.FAIL + "No historical data found for this user!"
+            print bcolors.OKBLUE
+            return None
+
+        else:
+            top_symptom = keywithmaxval(symptom_dict)
+            print bcolors.FAIL + "Personal Historical Data found, using:" + top_symptom
+            print bcolors.OKBLUE
+            return top_symptom
+
+
 
     def create_question(self, question):
         q_obj = question_interface()
@@ -184,6 +276,7 @@ class DoctorSkyNet(object):
         # print question
         self.last_asked_question = question
         return q_obj
+
 
     """
     invalidates the linked question if top question is false
@@ -199,7 +292,7 @@ class DoctorSkyNet(object):
                     if questions == None:
                         pass
                     #print question + " invalidated" + " for response " + self.response
-                    self.bucket_object.answered_question_True(question, False)
+                    self.bucket_object.answered_question_True(question, False, None, None)
 
     def next_basic_data_question(self):
         next_question = None
@@ -225,6 +318,9 @@ class DoctorSkyNet(object):
             self.response = response
         self.update_fractions()
         self.stage_1 = 1 # state just for future proofing. No use right now.
+        """
+        BASIC QUESTION LOGIC
+        """
         if self.stage_0 != 1: # basic question asking logic
             if self.last_asked_basic_question:
                 self.basic_data_questions_table[self.last_asked_basic_question] = self.response
@@ -239,6 +335,9 @@ class DoctorSkyNet(object):
                     self.db_connection.set_basic_data_for_chat_id(self.chat_id, attr, value)
             else:
                 return q_obj
+        """
+        NORMAL QUESTION LOGIC
+        """
 
         if self.done == 1:
             print "DONE"
@@ -252,6 +351,7 @@ class DoctorSkyNet(object):
             if q_obj == None:
                 self.done = 1
                 print "All Questions done!"
+                self.sendMail()
                 return None
             else:
                 return q_obj

@@ -7,15 +7,16 @@ import os
 import threading
 from multiprocessing import Process, Queue
 from time import sleep
+
 from telegram import Updater
+
 import dispatcher
-import logging
 
 # Enable logging
-logging.basicConfig(
+"""logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         level=logging.DEBUG)
-
+"""
 TOKEN = os.environ.get('TELEGRAM_API_KEY')
 CREATOR = dispatcher.dispatcher()
 MESSAGE_QUEUE = Queue()

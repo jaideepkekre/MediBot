@@ -3,12 +3,10 @@
 # _author_ = Jaideep Kekre/Sameer Deshmukh
 # _info_   = Connects to database and populates questions
 
-from question_interface import question_interface
-from helper import bcolors
-from expert_system_helper import question_interface_helper
-from scratch_pad import scratch_pad
-from symptom_validity_table import symptom_validity_table
 import redis
+
+from symptom_validity_table import symptom_validity_table
+
 
 class db(object):
 
@@ -44,7 +42,8 @@ class db(object):
     """
     get the counts of all or specific symptom.
     """
-    def get_global_symptom_count(self, symptom):
+
+    def get_global_symptom_count(self, symptom='all'):
         if symptom == 'all':
             return self.connection.hgetall('GLOBAL_SYMPTOM_COUNT')
         else:
@@ -74,6 +73,7 @@ class db(object):
     and set to '1' the first time this method is called with a given chat ID.
 
     Else, the symptom count will be incremented by 1 for that given chat ID.
+    ALSO INCREMENTS THE COUNT GLOBALLY
     """
     def set_symptom_data_for_chat_id(self, chat_id, symptom):
         user = str(chat_id) + ":symptoms"
