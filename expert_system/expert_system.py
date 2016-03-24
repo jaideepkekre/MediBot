@@ -15,6 +15,7 @@ class expert_system:
     def __init__(self, chat_id, db_connection):
         self.response = None
         self.status = 0
+        self.chat_id = chat_id
         self.AI = DoctorSkyNet(chat_id, db_connection)
         self.done = 0
         pass
@@ -25,9 +26,12 @@ class expert_system:
         # print user_response
 
         valid_keys = ['Start', 'Begin consultation with Doctor SkyNet']
+        if self.status == 0:
+            if user_response in valid_keys:
+                self.status = 1
+            else:
 
-        if user_response in valid_keys:
-            self.status = 1
+                return None
 
         if self.status == 1: # stage 1 last response from user stays None
             self.status = 2
@@ -42,7 +46,7 @@ class expert_system:
             if q_obj == None:
                 self.status = 3
                 returns = dict()
-                returns['text'] = 'Your Test is Complete'
+                returns['text'] = 'Your Test is Complete, Please tell the doctor your ID:' + str(self.chat_id)
                 returns['keyboard'] = []
                 self.done = 1
 

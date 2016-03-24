@@ -40,6 +40,7 @@ class core(object):
             expert_advice = self.expert.run_expert(user_response)
 
         response_list = list()
+
         if expert_advice == None:
             response_list.append('Hi ! Please click the button below to begin ! ')
             response_dict['response_list'] = response_list

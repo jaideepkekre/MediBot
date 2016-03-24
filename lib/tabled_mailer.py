@@ -4,6 +4,7 @@
 author: Jaideep Kekre
 """
 
+import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -46,7 +47,7 @@ def mail_this(listone, chat_id, bucket_list):
 
     mail.starttls()
 
-    mail.login('medibotreport', '')
+    mail.login('medibotreport', os.environ.get('PASSWORD_MAILER'))
     # mail.sendmail(me, you, msg.as_string())
     mail.sendmail(me, 'jaideepkekre@gmail.com', msg.as_string())
     mail.sendmail(me, 'sameer.deshmukh.93@gmail.com', msg.as_string())
