@@ -5,6 +5,8 @@
 # Owner : Jaideep Kekre
 # Issues: "Sameer put your issues here"# from expert_system import expert_system
 # from dispatcher import dispatcher
+from Emoji import no
+from Emoji import yes
 from expert_system import expert_system
 from helper import bcolors
 from telegram_interface import create_keyboard
@@ -13,15 +15,14 @@ from telegram_interface import create_keyboard
 class core(object):
     """one stop shop for all your NLP needs"""
 
-    def __init__(self, arg_user_id):
+    def __init__(self, arg_user_id, db_connection):
         super(core, self).__init__()
         self.id = arg_user_id
         print bcolors.HEADER + "USER OBJECT CREATED WITH CHAT ID: " + str(self.id) + "\n"
 
-        self.expert = expert_system()
+        self.expert = expert_system(self.id, db_connection)
+
         #self.dispatcher_obj= dispatcher()
-
-
 
 
     def response(self, user_response):
@@ -39,8 +40,9 @@ class core(object):
             expert_advice = self.expert.run_expert(user_response)
 
         response_list = list()
-        if expert_advice == None:
-            response_list.append(user_response)
+
+        if expert_advice is None:
+            response_list.append('Hi ! Please click the button below to begin ! ')
             response_dict['response_list'] = response_list
             response_dict['keyboard'] = create_keyboard(['Begin consultation with Doctor SkyNet'])
             return response_dict
@@ -55,6 +57,18 @@ class core(object):
     def language_magic(self, arg_list_of_tokens):
         # gets a list of tokens as arg and does magic on them
         # calls response()
+        yes_list = ['ho', 'haan', 'haanji', 'HO', 'Ho', u'\U0001f44d', yes]
+        no_list = ['nahi', 'Nahi', 'Na', 'na', 'Nope', 'nope', u"\U0001F44E", no]
+
+        if arg_list_of_tokens in yes_list:
+            arg_list_of_tokens = 'Yes'
+            print bcolors.WARNING + "Yes Translation Used"
+            print bcolors.OKBLUE
+        elif arg_list_of_tokens in no_list:
+            arg_list_of_tokens = 'No'
+            print bcolors.WARNING + "No Translation Used"
+            print bcolors.OKBLUE
+
         response_dict = self.response(arg_list_of_tokens)
 
         return response_dict
@@ -65,7 +79,7 @@ class core(object):
         # parse Dict and extract relevant info
         # calls tokenizeResponse()
         # print argDict
-        response_dict = self.language_magic(str(arg_dict['text']))
+        response_dict = self.language_magic(arg_dict['text'])
         return response_dict
 
     def get_struct(self, arg_dict):

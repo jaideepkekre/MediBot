@@ -12,6 +12,11 @@ from telegram import Updater
 
 import dispatcher
 
+# Enable logging
+"""logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        level=logging.DEBUG)
+"""
 TOKEN = os.environ.get('TELEGRAM_API_KEY')
 CREATOR = dispatcher.dispatcher()
 MESSAGE_QUEUE = Queue()
@@ -25,7 +30,7 @@ def return_messages(return_queue):
 
         for text in m['response_list']:
             bot.sendMessage(
-                    chat_id=m['chat_id'], text=text, reply_markup=m['keyboard'])
+                chat_id=m['chat_id'], text=text, reply_markup=m['keyboard'])
 
     user_thread_dict = {}
     while True:
@@ -56,14 +61,26 @@ def accept_message(bot, update):
     d = {
         'chat_id': update.message.chat_id,
         'text': update.message.text,
+        'username': update.message.from_user.username,
         'bot': bot
     }
-
     MESSAGE_QUEUE.put(d)
+
+
+def help_handler(bot, update):
+    text = "Begin by sending 'Start' to the bot and simply answer questions as\
+the come."
+    bot.sendMessage(update.message.chat_id, text=text)
+
+
+def settings_handler(bot, update):
+    bot.sendMessage(update.message.chat_id, text="nothing for now.")
 
 
 updater = Updater(token=TOKEN)
 message_sender = updater.dispatcher
+message_sender.addTelegramCommandHandler("help", help_handler)
+message_sender.addTelegramCommandHandler("settings", settings_handler)
 message_sender.addTelegramMessageHandler(accept_message)
 
 message_processor = Process(target=dispatch_messages, args=(MESSAGE_QUEUE,))

@@ -8,12 +8,11 @@ This module populates the buckets from symptom_validity_table.
 This module contains funtions to interact with diseases .
 
 """
-import heapq
 
 from disease import Disease
 from disease_signatures import Disease_Signature
+from helper import bcolors, keywithmaxval
 from symptom_validity_table import symptom_validity_table
-
 
 CRITICAL = 20
 IMPORTANT= 10
@@ -58,9 +57,29 @@ class Buckets:
         self.disease_top_score = dict(self.disease_score)
 
 
+
     """
     <------------------------PUBLIC METHODS TO BY CALLED BY OUTSIDE MODULES----------------->
     """
+
+    """
+    returns the list of asked questions , used in -1 , 0 as they use db no this module
+    """
+
+    def get_asked_questions(self):
+        return self.removed_questions_list
+
+    """
+    returns a list of [Disease Name , Fraction Done ] for doc mail
+    """
+
+    def get_bucket_fraction_list(self):
+        lists = list()
+        for disease_name in self.bucket.keys():
+            self.calculate_fraction(disease_name)
+            fraction = self.disease_fraction_done[disease_name]
+            lists.append([disease_name, fraction])
+        return lists
 
     """
     calculates avg score of all active buckets.
@@ -85,10 +104,12 @@ class Buckets:
     for algo1
     """
     def get_popular_symptoms(self, number_of_symptoms=1):
+        """
         top_symptoms = heapq.nlargest(number_of_symptoms, self.symptom_score, 
             key=self.symptom_score.get)
-        if len(top_symptoms) == 0:
-            return None
+        """
+        top_symptoms = keywithmaxval(self.symptom_score)
+
         return top_symptoms
 
     """
@@ -97,10 +118,12 @@ class Buckets:
     for algo2
     """
     def get_top_critical_symptoms(self, number_of_symptoms=1):
+        """
         top_symptoms = heapq.nlargest(number_of_symptoms, self.symptom_critical_count,
                                       key=self.symptom_critical_count.get)
-        if len(top_symptoms) == 0:
-            return None
+        """
+        top_symptoms = keywithmaxval(self.symptom_critical_count)
+
         return top_symptoms
 
     """
@@ -112,10 +135,14 @@ class Buckets:
     def get_buckets_top_symptom(self, number_of_symptoms=1):
         self.calculate_highest_symptom()
         # print self.top_value_bucket_symptoms
-        list_symptom = top_symptoms = heapq.nlargest(number_of_symptoms, self.top_value_bucket_symptoms,
+        """
+        list_symptom = heapq.nlargest(number_of_symptoms, self.top_value_bucket_symptoms,
+
                                                      key=self.top_value_bucket_symptoms.get)
-        if len(top_symptoms) == 0:
-            return None
+        """
+        list_symptom = keywithmaxval(self.top_value_bucket_symptoms)
+
+
         return list_symptom
 
 
@@ -130,7 +157,9 @@ class Buckets:
 
     response can be True, False or 'Yes'
     """
-    def answered_question_True(self, symptom, response='Yes'):
+
+    def answered_question_True(self, symptom, response, dbconnection, chat_ID):
+        # print self.disease_score
         if self.done == 1:
             print "No More Stuff"
         if response == 'Yes':
@@ -147,19 +176,20 @@ class Buckets:
             if response == symptom_state:
                 table_disease_object.set_score(symptom, 0)
                 table_disease_object.set(symptom, False)
-                # print "MATCH:" + str(symptom)
+                dbconnection.set_symptom_data_for_chat_id(chat_ID, symptom)
 
             else:
                 table_disease_object.set(symptom, False)
                 if table_disease_object.get_score(symptom) == CRITICAL:
                     self.remove_disease(table_disease_name)
-                    print table_disease_name + " removed"
+                    print bcolors.FAIL + table_disease_name + " removed"
                     if len(self.bucket) == 0:
                         self.done = 1
                 if table_disease_object.get_score(symptom) == IMPORTANT:
                     if table_disease_name in self.disease_about_to_removed:
                         self.remove_disease(table_disease_name)
-                        print table_disease_name + " removed"
+                        print bcolors.FAIL + table_disease_name + " removed"
+                        print bcolors.OKBLUE
                         if len(self.bucket) == 0:
                             self.done = 1
                 else:
@@ -222,6 +252,7 @@ class Buckets:
         table = symptom_validity_table
         table = self.bucket[disease]
         return table.get(symptom)
+
     def get_score_by_disease(self, disease_name):
         if disease_name in self.bucket.keys():
             self.calculate_current_score(disease_name)
@@ -243,7 +274,7 @@ class Buckets:
     def calculate_highest_symptom(self):
         for disease_name in self.bucket:
             symptom = self.get_highest_symptom(disease_name)
-            if symptom == None:
+            if symptom is None:
                 pass
             else:
 
@@ -333,7 +364,7 @@ class Buckets:
     '''
 
     def remove_symptom_score(self,symptom,disease_dict):
-        if disease_dict[symptom] == None : 
+        if disease_dict[symptom] is None : 
             print "symptom already asked , hence ignore"
         elif symptom == 'name':
             pass
@@ -379,6 +410,9 @@ class Buckets:
     def set_table(self, symptom, score, table_disease_object, disease_name, arg=True):
         table_disease_object.set_score(symptom, score)
         if symptom in self.symptom_signature_needed:
+            """
+            as the fever signature is not just yes no :)
+            """
             table_disease_object.set(symptom, self.disease_signature_object.get_fever(disease_name))
             #print table_disease_object.get_dict()
         else:
