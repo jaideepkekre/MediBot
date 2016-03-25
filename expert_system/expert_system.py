@@ -12,22 +12,26 @@ class expert_system:
     The awesome expert system that we gonna create.
     """
 
-    def __init__(self):
+    def __init__(self, chat_id, db_connection):
         self.response = None
         self.status = 0
-        self.AI = DoctorSkyNet()
+        self.chat_id = chat_id
+        self.AI = DoctorSkyNet(chat_id, db_connection)
         self.done = 0
         pass
 
     def run_expert(self, user_response):
         q_obj = question_interface()
         key = 'Start'
-        print user_response
+        # print user_response
 
         valid_keys = ['Start', 'Begin consultation with Doctor SkyNet']
+        if self.status == 0:
+            if user_response in valid_keys:
+                self.status = 1
+            else:
 
-        if user_response in valid_keys:
-            self.status = 1
+                return None
 
         if self.status == 1: # stage 1 last response from user stays None
             self.status = 2
@@ -39,10 +43,10 @@ class expert_system:
 
         if self.status == 2: # in stage 2 last response from user is passed to AI 
             q_obj = self.AI.askdoctor(user_response)
-            if q_obj == None:
+            if q_obj is None:
                 self.status = 3
                 returns = dict()
-                returns['text'] = 'Your Test is Complete'
+                returns['text'] = 'Your Test is Complete, Please tell the doctor your ID:' + str(self.chat_id)
                 returns['keyboard'] = []
                 self.done = 1
 
@@ -51,7 +55,7 @@ class expert_system:
             returns = dict()
             returns['text'] = q_obj.question
             returns['keyboard'] = q_obj.response
-            print "options are:" + str(q_obj.response)
+            # print "options are:" + str(q_obj.response)
             return returns
 
 

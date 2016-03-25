@@ -85,38 +85,22 @@ class question_interface_helper():
         linked_questions_list = []
         data = __import__(symptom_tag).data()
 
-        if serial == None and linked_question_tag == None:
+        if serial is None and linked_question_tag is None:
             for tag, value in data.iteritems():
                 linked_questions_list.append(self._build_linked_list(value, tag))
 
             linked_questions_list.sort(key=lambda x: x.serial)
-        elif serial == None and linked_question_tag:  # search and load linked question by tag
+        elif serial is None and linked_question_tag:  # search and load linked question by tag
             for tag, value in data.iteritems():
                 if tag == linked_question_tag:
                     linked_questions_list.append(self._build_linked_list(value, tag))
 
-        elif linked_question_tag == None and serial:  # search by serial
+        elif linked_question_tag is None and serial:  # search by serial
             for tag, value in data.iteritems():
                 if value['serial'] == serial:
                     linked_questions_list.append(self._build_linked_list(value, tag))
 
         return linked_questions_list
-
-    @classmethod
-    def load_basic_data_questions(self):
-        from basic_data import data
-        from question_interface import question_interface
-
-        question_list = []
-        data = data()
-
-        for attr, value in data.iteritems():
-            q = question_interface()
-            question_list.append(self._assign_attributes(q, value, attr))
-
-        question_list.sort(key=lambda x: x.serial)
-
-        return question_list
 
 def test():
     tq_list = question_interface_helper.load_top_questions()

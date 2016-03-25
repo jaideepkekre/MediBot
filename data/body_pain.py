@@ -2,12 +2,13 @@
 # Owner : Sameer Deshmukh
 # _author_ = Sameer Deshmukh
 # _info_   = Questions for body pain.
+from Emoji import yes, no
 
 def data():
     return {
         'body_pain_head': {
             'question': "Does your Head hurt?",
-            'response': ['Yes', 'No'],
+            'response': [yes, no],
             'response_type' : 'ruledchar',
             'serial' : 0,
 
@@ -15,7 +16,7 @@ def data():
 
         'body_pain_chest': {
             'question': "Does your chest hurt?",
-            'response': ['Yes', 'No'],
+            'response': [yes, no],
             'response_type': 'ruledchar',
             'serial': 1,
 
@@ -23,7 +24,7 @@ def data():
 
         'body_pain_stomach': {
             'question': "Does your stomach area hurt?",
-            'response': ['Yes', 'No'],
+            'response': [yes, no],
             'response_type': 'ruledchar',
             'serial': 2,
 
@@ -31,7 +32,7 @@ def data():
 
         'body_pain_muscles': {
             'question': "Do your muscles hurt?",
-            'response': ['Yes', 'No'],
+            'response': [yes, no],
             'response_type': 'ruledchar',
             'serial': 3,
 

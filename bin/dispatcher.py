@@ -8,6 +8,7 @@
 
 
 import core
+from db_store import db
 from helper import bcolors
 from telegram_interface import create_keyboard
 
@@ -20,10 +21,11 @@ class dispatcher():
     """
 
     def __init__(self):
-        self.object_list = dict()
         # dict to store active objects and map them to users
-
-        pass
+        self.object_list = dict()
+        # redis db connection object for the conversation. Pass this to whatever
+        # class needs a connection to the db.
+        self.db_connection = db()
 
     def dispatch_to_core(self, arg_dict):
         messageDict = arg_dict
@@ -48,7 +50,7 @@ class dispatcher():
                 return response_dict
 
         print bcolors.FAIL + "User with chat id" + str(chat_id) + " not found , creating new object "
-        coreobj = core.core(chat_id)
+        coreobj = core.core(chat_id, self.db_connection)
         self.object_list[chat_id] = coreobj
         # stores created object in class variable for future use.
         response_dict = coreobj.run_core(messageDict)
@@ -57,12 +59,16 @@ class dispatcher():
     def run_dispatcher(self, arg_dict):
         # called by server()
         # scaffolding code
+        # make the initial entry in DB that a username with corresponding chat id
+        #   has arrived.
+        self.db_connection.set_username_chat_id_entry(
+            arg_dict['username'], arg_dict['chat_id'])
         response_dict = self.dispatch_to_core(arg_dict)
         # returned to server()
         # response dict has field 'chat_id' 'response_list'
         # logging
-        print bcolors.OKGREEN + "\input is :" + str(arg_dict['text'])
-        print bcolors.OKBLUE + "response is :" + str(response_dict['response_list']) + "\n"
+        print bcolors.OKGREEN + "input is :" + (arg_dict['text'])
+        print bcolors.OKBLUE + "response is :" + (response_dict['response_list'][0]) + "\n"
         # print self.object_list
         return response_dict
 
@@ -75,6 +81,7 @@ class dispatcher():
             if chatid in self.object_list.keys():
                 self.object_list.pop(chatid)
                 print bcolors.FAIL + "Chat ID : " + str(chatid) + " removed"
+                # send mail here
                 return True
         else:
             return False
