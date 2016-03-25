@@ -4,7 +4,7 @@
 # author : @v0dro
 
 from dispatcher import dispatcher
-from helper import bcolors
+from medibot_helper import bcolors
 
 class tester(object):
     """this class is deprecated for now. stay tuned."""

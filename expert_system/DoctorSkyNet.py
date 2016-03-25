@@ -4,7 +4,7 @@ Owner = Jaideep Kekre
 This module askes the questions
 """
 from disease_interface import Buckets
-from helper import bcolors, keywithmaxval
+from medibot_helper import bcolors, keywithmaxval
 from question_interface import question_interface
 from scratch_pad import scratch_pad
 from tabled_mailer import mail_this
@@ -45,7 +45,7 @@ class DoctorSkyNet(object):
         self.done = 0
 
     """
-    sends mail using helper
+    sends mail using medibot_helper
     """
 
     def sendMail(self):

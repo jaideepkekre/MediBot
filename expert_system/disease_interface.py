@@ -8,11 +8,10 @@ This module populates the buckets from symptom_validity_table.
 This module contains funtions to interact with diseases .
 
 """
-
+from symptom_validity_table import symptom_validity_table
 from disease import Disease
 from disease_signatures import Disease_Signature
-from helper import bcolors, keywithmaxval
-from symptom_validity_table import symptom_validity_table
+from medibot_helper import bcolors, keywithmaxval
 
 CRITICAL = 20
 IMPORTANT= 10

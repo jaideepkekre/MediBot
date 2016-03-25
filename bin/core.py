@@ -8,7 +8,7 @@
 from Emoji import no
 from Emoji import yes
 from expert_system import expert_system
-from helper import bcolors
+from medibot_helper import bcolors
 from telegram_interface import create_keyboard
 
 

@@ -5,7 +5,7 @@
 
 import re
 
-from helper import bcolors
+from medibot_helper import bcolors
 
 
 class question_interface(object):
