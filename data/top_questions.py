@@ -19,6 +19,31 @@ def data():
             'response': [yes, no],
             'response_type' : 'ruledchar',
         },
+        'head_ache' : {
+            'question' : "Do you have a head ache?",
+            'response' : [yes, no],
+            'response_type' : 'ruledchar'
+        },
+        'body_chills' : {
+            'question' : "Are you experiencing body chills?",
+            'response' : [yes, no],
+            'response_type' : 'ruledchar'
+        },
+        'diarrhea' : {
+            'question' : "Are you having very frequent loose motions?",
+            'response' : [yes, no],
+            'response_type' : 'ruledchar'
+        },
+        'consumed_contaminated_stuff' : {
+            'question' : "Did you recently consume contaminated food or water?",
+            'response' : [yes, no],
+            'response_type' : 'ruledchar'
+        },
+        'extreme_weakness' : {
+            'question' : "Are you experiencing extreme weakness?",
+            'response' : [yes, no],
+            'response_type' : 'ruledchar'
+        },
         'rash' : {
             'question' : "Are you having a rash anywhere on your body?",
             'response': [yes, no],
@@ -47,6 +72,11 @@ def data():
         'yellow_eyes' : {
             'question' : "Are you having yellowing of eyes?",
             'response': [yes, no],
+            'response_type' : 'ruledchar'
+        },
+        'yellow_nails' : {
+            'question' : "Are you having yellow nails?",
+            'response' : [yes, no],
             'response_type' : 'ruledchar'
         },
         'clay_coloured_bowels' : {
