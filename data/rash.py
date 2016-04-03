@@ -2,6 +2,7 @@
 # Owner : Sameer Deshmukh
 # _author_ = Sameer Deshmukh
 # _info_   = Questions for rash.
+from Emoji import yes, no
 
 def data():
     return {
@@ -17,6 +18,12 @@ def data():
                 'response_type' : 'ruledchar',
                 'tag' : 'rash_area_more_rash'
             }
+        },
+        'rose_spots' : {
+            'question' : "Does your rash look like rose-coloured spots?",
+            'response' : [yes, no],
+            'response_type' : 'ruledchar',
+            'serial' : 1
         }    
     }
 
