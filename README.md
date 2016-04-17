@@ -18,6 +18,10 @@ sudo cp src/redis-cli /usr/local/bin/
 ```
 * Start with `redis-server`. This will start redis on localhost on port 6379.
 
+**HTML**
+
+Check out the zip file in lib/ for instructions to install HTML support.
+
 #Date : 2 JAN 2016
 ## Conventions
 

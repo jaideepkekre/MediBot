@@ -17,13 +17,18 @@ class Disease_Signature(object):
 
         self.hepA = 'hepA'
         self.dengue = 'dengue'
+        self.malaria = 'malaria'
+        self.typhoid_fever = 'typhoid_fever'
+        self.leptospirosis = 'leptospirosis'
         self.fever_states = ['Yes, High (> 103 F)', 'Yes, Mild (101-103 F)', 'Yes, Very Mild (99 - 101 F)', 'No']
         # print self.fever_states[0]
 
         self.fever = {
             self.dengue: self.fever_states[0],
-            self.hepA: self.fever_states[1]
-
+            self.hepA: self.fever_states[1],
+            self.malaria : self.fever_states[0],
+            self.typhoid_fever : self.fever_states[0],
+            self.leptospirosis : self.fever_states[1]
         }
 
     def get_fever(self, disease_name):

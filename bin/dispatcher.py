@@ -9,7 +9,7 @@
 
 import core
 from db_store import db
-from helper import bcolors
+from medibot_helper import bcolors
 from telegram_interface import create_keyboard
 
 
