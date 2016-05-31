@@ -8,10 +8,10 @@ This module populates the buckets from symptom_validity_table.
 This module contains funtions to interact with diseases .
 
 """
-from symptom_validity_table import symptom_validity_table
 from disease import Disease
 from disease_signatures import Disease_Signature
 from medibot_helper import bcolors, keywithmaxval
+from symptom_validity_table import symptom_validity_table
 
 CRITICAL = 20
 IMPORTANT= 10
@@ -27,6 +27,7 @@ Optional symptoms: 5  #Symptoms which the patient may not exhibit .
 
 class Buckets:
     def __init__(self):
+        # Disease name : Table disease object
         self.bucket  = dict()
 
         # for algo1
