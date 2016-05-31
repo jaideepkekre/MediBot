@@ -52,7 +52,7 @@ class Buckets:
 
         self.diseases_object = Disease()
         self.disease_signature_object = Disease_Signature()
-
+        # self initialization of object in init
         self.populate_diseases()
         self.disease_top_score = dict(self.disease_score)
 
