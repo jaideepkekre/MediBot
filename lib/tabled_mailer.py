@@ -15,6 +15,7 @@ import HTML
 def mail_this(listone, chat_id, bucket_list):
     # me == my email address
     # you == recipient's email address
+    #Pretty Table creation
     htmlcode = HTML.table(listone, header_row=['Question', 'Response'])
     htmlcode = htmlcode + '<BR>' + HTML.table(bucket_list, header_row=['Disease', 'Fraction'])
 
