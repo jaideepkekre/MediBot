@@ -49,6 +49,6 @@ def mail_this(listone, chat_id, bucket_list):
     mail.login('medibotreport', os.environ.get('PASSWORD_MAILER'))
     # mail.sendmail(me, you, msg.as_string())
     mail.sendmail(me, 'jaideepkekre@gmail.com', msg.as_string())
-    mail.sendmail(me, 'sameer.deshmukh.93@gmail.com', msg.as_string())
+    mail.sendmail(me, 'sameer.deshmukh93@gmail.com', msg.as_string())
     mail.quit()
     print "mail sent"
