@@ -171,7 +171,7 @@ class DoctorSkyNet(object):
             return None
 
     """
-    ask the question which will the most buckets.
+    ask the question which will fill the most buckets.
     """
     def algorithm_one(self):
         question = self.bucket_object.get_popular_symptoms()
